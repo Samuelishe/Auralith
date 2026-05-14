@@ -43,6 +43,8 @@
 - [x] Add minimal Avalonia startup and main media shell.
 - [x] Isolate Hanuman/libmpv surface code inside `Auralith.Playback.Mpv`.
 - [x] Build solution successfully on .NET 10.
+- [x] Add minimal xUnit v3 + Shouldly test foundation.
+- [x] Verify `dotnet test Auralith.sln`.
 - [x] Confirm controlled startup when native libmpv is missing.
 - [ ] Provide compatible Windows native `libmpv.2` beside app output for local spike validation.
 - [ ] Validate embedded video rendering.

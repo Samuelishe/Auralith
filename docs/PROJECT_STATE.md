@@ -18,7 +18,9 @@ Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Ava
 - No `tests/` projects have been created yet.
 - Minimal Avalonia application foundation exists.
 - Minimal Hanuman/libmpv playback spike code exists.
+- Minimal xUnit v3 + Shouldly test foundation exists for Core and Playback.
 - Build succeeds on .NET 10.
+- Tests pass on .NET 10.
 - Runtime startup succeeds in controlled failure mode when native `libmpv` is missing.
 - Actual embedded playback is not yet validated because native `libmpv.2` is not available in the app output/runtime path.
 
@@ -35,6 +37,7 @@ In scope:
 - Unified media shell concept planning.
 - Minimal Phase 1 technical validation.
 - Native libmpv loading investigation.
+- Lightweight unit testing for non-native Core/Playback logic.
 
 Out of scope:
 
@@ -48,6 +51,7 @@ Out of scope:
 - SQLite layer.
 - Service layer.
 - Control library.
+- UI/native playback automated testing.
 
 ## Continuity Goals
 

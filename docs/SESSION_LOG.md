@@ -199,3 +199,32 @@ Notes:
 Next:
 
 - Update README when native libmpv loading and embedded playback are validated.
+
+## 2026-05-14 - Minimal Testing Foundation
+
+Context:
+
+- Phase 1 needed a restrained test harness to protect current non-native Core/Playback logic without expanding architecture.
+
+Changed:
+
+- Added `tests/Auralith.Core.Tests` using xUnit v3 and Shouldly.
+- Added `tests/Auralith.Playback.Tests` using xUnit v3 and Shouldly.
+- Added `PlaybackConstraints` in `Auralith.Playback` and used it from `MpvPlaybackSession`.
+- Added small tests for assembly loading and playback volume/position constraints.
+- Added test projects to the solution.
+
+Validated:
+
+- `dotnet restore Auralith.sln` succeeds.
+- `dotnet build Auralith.sln --no-restore` succeeds with 0 warnings and 0 errors.
+- `dotnet test Auralith.sln` succeeds: 9 tests passed.
+
+Notes:
+
+- UI automation, native libmpv integration tests, screenshot tests, coverage gates, and benchmarking remain intentionally out of scope.
+- Real playback validation remains manual/spike work until native libmpv loading is resolved.
+
+Next:
+
+- Keep tests focused on non-native logic until implementation pressure justifies broader coverage.

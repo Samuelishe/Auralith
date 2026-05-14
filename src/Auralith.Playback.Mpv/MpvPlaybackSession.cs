@@ -27,7 +27,7 @@ public sealed class MpvPlaybackSession : IPlaybackSession
     public double Volume
     {
         get => ReadProperty("volume", 70d);
-        set => _mpv.SetProperty("volume", Math.Clamp(value, 0, 100));
+        set => _mpv.SetProperty("volume", PlaybackConstraints.ClampVolume(value));
     }
 
     public void Open(string path)
@@ -45,7 +45,7 @@ public sealed class MpvPlaybackSession : IPlaybackSession
 
     public void Seek(TimeSpan position)
     {
-        _mpv.SetProperty("time-pos", Math.Max(0, position.TotalSeconds));
+        _mpv.SetProperty("time-pos", PlaybackConstraints.ClampPosition(position).TotalSeconds);
     }
 
     private T ReadProperty<T>(string name, T fallback)

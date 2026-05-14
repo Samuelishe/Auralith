@@ -14,11 +14,13 @@ Auralith currently has:
 - A unified main media shell direction.
 - A narrow playback spike boundary using `HanumanInstitute.LibMpv` / `HanumanInstitute.LibMpv.Avalonia`.
 - A minimal `Auralith.Playback` contract and `Auralith.Playback.Mpv` implementation boundary.
+- A lightweight xUnit v3 + Shouldly test foundation for Core and Playback.
 
 Validated so far:
 
 - `dotnet restore Auralith.sln` succeeds.
 - `dotnet build Auralith.sln --no-restore` succeeds.
+- `dotnet test Auralith.sln` succeeds.
 - The app starts in a controlled failure mode when native libmpv is missing.
 - Concrete Hanuman/libmpv usage is isolated in `Auralith.Playback.Mpv`.
 
@@ -140,6 +142,30 @@ Current expected build result:
 
 - The solution builds successfully on .NET 10.
 
+## Testing
+
+Run the current test suite:
+
+```powershell
+dotnet test Auralith.sln
+```
+
+Current testing scope is intentionally small:
+
+- Assembly smoke tests for `Auralith.Core` and `Auralith.Playback`.
+- Unit tests for non-native playback constraints such as volume and position clamping.
+
+Current testing scope intentionally excludes:
+
+- UI automation.
+- Screenshot testing.
+- Native libmpv integration tests.
+- End-to-end media playback tests.
+- Coverage gates.
+- Benchmarking infrastructure.
+
+Real native playback validation remains manual/spike territory until libmpv loading, embedded rendering, and platform behavior are understood.
+
 ## Running
 
 Run the current minimal app:
@@ -198,6 +224,9 @@ src/
   Auralith.Core/
   Auralith.Playback/
   Auralith.Playback.Mpv/
+tests/
+  Auralith.Core.Tests/
+  Auralith.Playback.Tests/
 ```
 
 Not currently present:
@@ -208,7 +237,6 @@ Not currently present:
 - `Auralith.Infrastructure`
 - `Auralith.AudioPlayer`
 - `Auralith.VideoPlayer`
-- test projects
 
 Those projects should not be created until real implementation pressure justifies them.
 
@@ -231,6 +259,7 @@ Preferred approach:
 - Technical validation before design certainty.
 - Documentation of assumptions, failures, and architectural pressure.
 - Shared shell and playback concepts rather than separate audio/video applications.
+- Lightweight tests for non-native logic, without turning tests into architecture.
 
 ## Documentation
 
@@ -257,6 +286,8 @@ Auralith depends on, or plans to depend on, several external open-source technol
 - [mpv / libmpv](https://mpv.io/) - mpv project. Media playback engine and client API.
 - [FFmpeg](https://ffmpeg.org/) - FFmpeg project. Multimedia framework used by mpv/libmpv.
 - [HanumanInstitute.LibMpv](https://github.com/mysteryx93/LibMpv-OpenGL) - Hanuman Institute / mysteryx93. .NET libmpv bindings and Avalonia integration used for the current spike.
+- [xUnit.net](https://xunit.net/) - xUnit project. Test framework used for the current unit test foundation.
+- [Shouldly](https://github.com/shouldly/shouldly) - Shouldly project. Assertion library used for readable tests.
 - [TagLibSharp](https://github.com/mono/taglib-sharp) - Planned metadata reading library.
 - [Serilog](https://serilog.net/) - Planned structured logging library.
 - [SQLite](https://www.sqlite.org/) - Planned embedded database for local state where needed.

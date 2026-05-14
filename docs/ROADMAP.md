@@ -47,7 +47,9 @@ Current validation status:
 
 - Minimal project skeleton created.
 - Minimal Avalonia application foundation created.
+- Minimal Core/Playback test projects created.
 - Build succeeds on .NET 10.
+- Tests pass on .NET 10.
 - Hanuman/libmpv binding is isolated in `Auralith.Playback.Mpv`.
 - App startup no longer crashes when native `libmpv` is missing.
 - Native `libmpv.2` is missing from the Windows runtime path, so embedded playback is not yet validated.
@@ -116,6 +118,11 @@ Current blocker:
 - `HanumanInstitute.LibMpv.Avalonia` attempts to load native `libmpv.2`.
 - No compatible native libmpv build is currently present next to the app output.
 - Windows bundled-native strategy must be decided before playback can be validated.
+
+Testing boundary:
+
+- Unit tests cover non-native Core/Playback logic only.
+- Native playback validation remains manual/spike work until libmpv loading and embedded rendering are stable enough to justify integration tests.
 
 Avoid as primary direction:
 

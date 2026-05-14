@@ -590,3 +590,21 @@ Consequences:
 - The app should fail in a controlled way when native libmpv is missing.
 - Windows development needs a compatible bundled native libmpv next to the app output before playback can be validated.
 - Embedded rendering and playback controls remain unvalidated until native loading is resolved.
+
+## 2026-05-14 - Minimal Testing Foundation
+
+Status: Accepted
+
+Context:
+
+Phase 1 needs regression protection for emerging Core/Playback logic without turning tests into infrastructure.
+
+Decision:
+
+Use a lightweight xUnit v3 + Shouldly test foundation with `Auralith.Core.Tests` and `Auralith.Playback.Tests`.
+
+Consequences:
+
+- Unit tests should cover non-native logic and basic assembly/project integrity.
+- Do not add UI automation, screenshot testing, native libmpv integration tests, coverage gates, benchmarks, excessive mocking, or test-only infrastructure at this stage.
+- Native playback behavior remains manual/spike validation until libmpv loading and embedded rendering assumptions are validated.
