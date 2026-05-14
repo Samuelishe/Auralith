@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Auralith.Core;
 using Auralith.Playback;
 using Auralith.Playback.Mpv;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -16,14 +17,17 @@ namespace Auralith.App;
 
 public sealed partial class MainWindow : Window
 {
+    private static readonly TimeSpan SeekConfirmationTimeout = TimeSpan.FromSeconds(2);
+    private const double SeekConfirmationToleranceSeconds = 2;
     private readonly DispatcherTimer _positionTimer;
-    private readonly DispatcherTimer _overlayIdleTimer;
     private readonly DispatcherTimer _contextNoticeTimer;
     private MediaOpenRequest? _pendingOpenRequest;
     private IPlaybackSession? _playback;
     private string? _playbackFailureMessage;
+    private double? _pendingSeekTargetSeconds;
+    private DateTimeOffset _pendingSeekDeadline;
+    private DateTimeOffset _suppressPositionPollingUntil;
     private bool _isSeeking;
-    private bool _overlayPinned;
     private bool _suppressVolumeChange;
 
     public MainWindow()
@@ -44,13 +48,8 @@ public sealed partial class MainWindow : Window
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
         _positionTimer.Tick += PositionTimer_Tick;
 
-        _overlayIdleTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2.5) };
-        _overlayIdleTimer.Tick += OverlayIdleTimer_Tick;
-
         _contextNoticeTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1.2) };
         _contextNoticeTimer.Tick += ContextNoticeTimer_Tick;
-
-        ShowOverlay();
     }
 
     private void PlaybackSurface_StatusChanged(object? sender, PlaybackSurfaceStatusChangedEventArgs e)
@@ -127,24 +126,42 @@ public sealed partial class MainWindow : Window
 
     private void StopButton_Click(object? sender, RoutedEventArgs e)
     {
+        Report("Stop button clicked");
         _playback?.Stop();
         TimelineSlider.Value = 0;
         UpdatePlaybackState();
-        ShowOverlay();
+    }
+
+    private void DebugSeekForwardButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_playback is null)
+        {
+            PlaybackStatusText.Text = "Debug seek skipped: playback is not ready";
+            return;
+        }
+
+        var target = _playback.Position + TimeSpan.FromSeconds(60);
+        var duration = _playback.Duration;
+        if (duration > TimeSpan.Zero && target > duration)
+        {
+            target = TimeSpan.FromSeconds(Math.Max(duration.TotalSeconds - 5, 0));
+        }
+
+        Report($"+60s debug seek clicked; current={_playback.Position.TotalSeconds:0.###}s; target={target.TotalSeconds:0.###}s; duration={duration.TotalSeconds:0.###}s");
+        _pendingSeekTargetSeconds = target.TotalSeconds;
+        _pendingSeekDeadline = DateTimeOffset.UtcNow.Add(SeekConfirmationTimeout);
+        _suppressPositionPollingUntil = _pendingSeekDeadline;
+        TimelineSlider.Value = Math.Clamp(target.TotalSeconds, 0, TimelineSlider.Maximum);
+        _playback.Seek(target);
+        UpdateSeekDebugText();
     }
 
     private void VideoSurface_PointerMoved(object? sender, PointerEventArgs e)
     {
-        ShowOverlay();
     }
 
     private void VideoSurface_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (Overlay.IsPointerOver)
-        {
-            return;
-        }
-
         var point = e.GetCurrentPoint(VideoSurface);
         if (point.Properties.IsRightButtonPressed)
         {
@@ -162,11 +179,6 @@ public sealed partial class MainWindow : Window
 
     private void VideoSurface_DoubleTapped(object? sender, TappedEventArgs e)
     {
-        if (Overlay.IsPointerOver)
-        {
-            return;
-        }
-
         ToggleFullscreen();
         e.Handled = true;
     }
@@ -200,31 +212,26 @@ public sealed partial class MainWindow : Window
         e.Handled = true;
     }
 
-    private void TimelineSlider_PointerEntered(object? sender, PointerEventArgs e)
-    {
-        _overlayPinned = true;
-        TimelineSlider.Height = 32;
-        ShowOverlay();
-    }
-
-    private void TimelineSlider_PointerExited(object? sender, PointerEventArgs e)
-    {
-        _overlayPinned = false;
-        TimelineSlider.Height = double.NaN;
-        RestartOverlayIdleTimer();
-    }
-
     private void TimelineSlider_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         _isSeeking = true;
-        ShowOverlay();
     }
 
     private void TimelineSlider_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
         SeekToSliderValue();
         _isSeeking = false;
-        RestartOverlayIdleTimer();
+    }
+
+    private void TimelineSlider_PointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
+    {
+        if (!_isSeeking)
+        {
+            return;
+        }
+
+        SeekToSliderValue();
+        _isSeeking = false;
     }
 
     private void TimelineSlider_PropertyChanged(object? sender, Avalonia.AvaloniaPropertyChangedEventArgs e)
@@ -243,33 +250,16 @@ public sealed partial class MainWindow : Window
         }
 
         _playback.Volume = VolumeSlider.Value;
-        ShowOverlay();
-    }
-
-    private void Overlay_PointerEntered(object? sender, PointerEventArgs e)
-    {
-        _overlayPinned = true;
-        ShowOverlay();
-    }
-
-    private void Overlay_PointerExited(object? sender, PointerEventArgs e)
-    {
-        _overlayPinned = false;
-        RestartOverlayIdleTimer();
     }
 
     private void PositionTimer_Tick(object? sender, EventArgs e)
     {
-        UpdatePlaybackState();
-    }
-
-    private void OverlayIdleTimer_Tick(object? sender, EventArgs e)
-    {
-        if (!_overlayPinned)
+        if (_pendingSeekTargetSeconds is { } target)
         {
-            Overlay.IsVisible = false;
-            _overlayIdleTimer.Stop();
+            Report($"Position tick during pending seek: target={target:0.###}s; position={_playback?.Position.TotalSeconds:0.###}s; duration={_playback?.Duration.TotalSeconds:0.###}s; deadline={_pendingSeekDeadline:O}");
         }
+
+        UpdatePlaybackState();
     }
 
     private void ContextNoticeTimer_Tick(object? sender, EventArgs e)
@@ -287,15 +277,15 @@ public sealed partial class MainWindow : Window
 
         _playback.IsPaused = !_playback.IsPaused;
         UpdatePlaybackState();
-        ShowOverlay();
     }
 
     private void ToggleFullscreen()
     {
-        WindowState = WindowState == WindowState.FullScreen
-            ? WindowState.Normal
-            : WindowState.FullScreen;
-        ShowOverlay();
+        var enteringFullscreen = WindowState != WindowState.FullScreen;
+        WindowState = enteringFullscreen ? WindowState.FullScreen : WindowState.Normal;
+        HeaderBar.IsVisible = !enteringFullscreen;
+        ControlBar.Padding = enteringFullscreen ? new Thickness(12, 6) : new Thickness(14, 10);
+        FullscreenButton.Content = enteringFullscreen ? "Exit fullscreen" : "Fullscreen";
     }
 
     private void SeekToSliderValue()
@@ -305,7 +295,25 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        _playback.Seek(TimeSpan.FromSeconds(TimelineSlider.Value));
+        var durationSeconds = Math.Max(_playback.Duration.TotalSeconds, 0);
+        if (durationSeconds <= 0)
+        {
+            PlaybackStatusText.Text = "Seek skipped: duration is not available";
+            return;
+        }
+
+        var targetSeconds = Math.Clamp(TimelineSlider.Value, 0, durationSeconds);
+        _pendingSeekTargetSeconds = targetSeconds;
+        _pendingSeekDeadline = DateTimeOffset.UtcNow.Add(SeekConfirmationTimeout);
+        _suppressPositionPollingUntil = _pendingSeekDeadline;
+        TimelineSlider.Value = targetSeconds;
+        UpdateTimeText(TimeSpan.FromSeconds(targetSeconds), _playback.Duration);
+
+        _playback.Seek(TimeSpan.FromSeconds(targetSeconds));
+        if (!string.IsNullOrWhiteSpace(_playback.LastDiagnosticMessage))
+        {
+            PlaybackStatusText.Text = _playback.LastDiagnosticMessage;
+        }
     }
 
     private void OpenMedia(MediaOpenRequest? request)
@@ -328,11 +336,11 @@ public sealed partial class MainWindow : Window
         try
         {
             PlaybackStatusText.Text = "Opening media";
+            Report($"OpenMedia calls playback.Open: {request.Path}");
             _playback.Open(request.Path);
             MediaPathText.Text = Path.GetFileName(request.Path);
             PlaybackStatusText.Text = "Media opened";
             UpdatePlaybackState();
-            ShowOverlay();
         }
         catch (Exception ex)
         {
@@ -361,11 +369,45 @@ public sealed partial class MainWindow : Window
 
         var duration = _playback.Duration;
         var position = _playback.Position;
+        var maximum = Math.Max(duration.TotalSeconds, 1);
+        TimelineSlider.Maximum = maximum;
 
-        if (!_isSeeking)
+        if (_isSeeking)
         {
-            TimelineSlider.Maximum = Math.Max(duration.TotalSeconds, 1);
-            TimelineSlider.Value = Math.Clamp(position.TotalSeconds, 0, TimelineSlider.Maximum);
+            UpdateTimeText(TimeSpan.FromSeconds(TimelineSlider.Value), duration);
+        }
+        else if (_pendingSeekTargetSeconds is { } targetSeconds)
+        {
+            var now = DateTimeOffset.UtcNow;
+            var delta = Math.Abs(position.TotalSeconds - targetSeconds);
+            if (delta <= SeekConfirmationToleranceSeconds)
+            {
+                _pendingSeekTargetSeconds = null;
+                _suppressPositionPollingUntil = DateTimeOffset.MinValue;
+                PlaybackStatusText.Text = "Seek confirmed";
+                TimelineSlider.Value = Math.Clamp(position.TotalSeconds, 0, maximum);
+                UpdateTimeText(position, duration);
+            }
+            else if (now < _pendingSeekDeadline)
+            {
+                TimelineSlider.Value = Math.Clamp(targetSeconds, 0, maximum);
+                UpdateTimeText(TimeSpan.FromSeconds(targetSeconds), duration);
+            }
+            else
+            {
+                _pendingSeekTargetSeconds = null;
+                _suppressPositionPollingUntil = DateTimeOffset.MinValue;
+                PlaybackStatusText.Text = _playback.LastDiagnosticMessage is { Length: > 0 } message
+                    ? $"Seek not confirmed: {message}"
+                    : "Seek not confirmed";
+                TimelineSlider.Value = Math.Clamp(position.TotalSeconds, 0, maximum);
+                UpdateTimeText(position, duration);
+            }
+        }
+        else if (DateTimeOffset.UtcNow >= _suppressPositionPollingUntil)
+        {
+            TimelineSlider.Value = Math.Clamp(position.TotalSeconds, 0, maximum);
+            UpdateTimeText(position, duration);
         }
 
         _suppressVolumeChange = true;
@@ -373,7 +415,24 @@ public sealed partial class MainWindow : Window
         _suppressVolumeChange = false;
 
         PlayPauseButton.Content = _playback.IsPaused ? "Play" : "Pause";
-        UpdateTimeText(position, duration);
+        UpdateSeekDebugText();
+    }
+
+    private void UpdateSeekDebugText()
+    {
+        if (_playback is null)
+        {
+            SeekDebugText.Text = "Seek diagnostics: playback session not ready";
+            return;
+        }
+
+        SeekDebugText.Text =
+            $"UI Duration: {_playback.Duration.TotalSeconds:0.###}s | " +
+            $"UI Position: {_playback.Position.TotalSeconds:0.###}s | " +
+            $"Seekable: {_playback.Seekable} | " +
+            $"Paused: {_playback.IsPaused} | " +
+            $"Pending target: {(_pendingSeekTargetSeconds is null ? "<none>" : $"{_pendingSeekTargetSeconds.Value:0.###}s")}\n" +
+            (_playback.DebugSnapshot ?? "mpv debug snapshot: <none>");
     }
 
     private void UpdateTimeText(TimeSpan position, TimeSpan duration)
@@ -391,27 +450,11 @@ public sealed partial class MainWindow : Window
         return value.ToString(@"mm\:ss");
     }
 
-    private void ShowOverlay()
-    {
-        Overlay.IsVisible = true;
-        RestartOverlayIdleTimer();
-    }
-
-    private void RestartOverlayIdleTimer()
-    {
-        _overlayIdleTimer.Stop();
-        if (!_overlayPinned)
-        {
-            _overlayIdleTimer.Start();
-        }
-    }
-
     private void ShowContextMenuPlaceholder()
     {
         ContextMenuNotice.IsVisible = true;
         _contextNoticeTimer.Stop();
         _contextNoticeTimer.Start();
-        ShowOverlay();
     }
 
     private static void Report(string message)

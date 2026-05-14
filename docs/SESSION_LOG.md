@@ -401,3 +401,143 @@ Still Not Validated:
 Notes:
 
 - Current diagnostics are temporary Phase 1 tooling and should not become production UI.
+
+## 2026-05-14 - Render Regression And Timeline Stability Fix
+
+Context:
+
+- Manual validation after the minimal overlay pass failed.
+- Audio played and overlay controls were visible, but video was black.
+- Timeline moved vertically on hover.
+- Seek appeared to snap back.
+
+Changed:
+
+- Reverted Hanuman renderer selection from explicit `VideoRenderer.OpenGl` back to `VideoRenderer.Auto`.
+- Kept the known working Windows native rendering path as the priority.
+- Documented overlay-over-video as an unresolved native surface z-order risk.
+- Removed timeline height mutation on hover and gave the timeline a stable height.
+- Switched seek from setting `time-pos` directly to Hanuman `MpvContext.Seek(..., SeekOption.Absolute)`.
+- Added seek diagnostics with requested seconds, duration, and position before seek.
+
+Validated:
+
+- Build succeeds after the revert.
+- Command-line launch reaches native runtime, playback readiness, and media open command dispatch with Auto renderer.
+
+Still Not Validated:
+
+- Manual confirmation that video image is restored after reverting OpenGL.
+- Seek behavior after the command change.
+- Overlay z-order over the native video surface.
+- Play/pause, volume, fullscreen, resize, and drag/drop with visible playback.
+
+## 2026-05-14 - Bottom Control Bar For Native Renderer
+
+Context:
+
+- Manual validation confirmed that `VideoRenderer.Auto` / Windows native renderer shows video and plays audio.
+- The Avalonia overlay controls are hidden by the native video surface.
+- The OpenGL renderer produced black video, so it cannot be the default for the current Windows spike.
+
+Changed:
+
+- Moved playback controls out of the overlay and into a stable bottom control bar below the video surface.
+- Kept `VideoRenderer.Auto` as the default render path.
+- Removed overlay idle show/hide behavior from the current Phase 1 UI path.
+- Kept compact status text and console/debug diagnostics for the spike.
+
+Validated:
+
+- Build succeeds.
+- Command-line launch still reaches playback readiness and media open command dispatch.
+
+Still Not Validated:
+
+- Manual confirmation of Play/Pause, Stop, seek, volume, fullscreen, resize, and drag/drop with the bottom control bar.
+
+Notes:
+
+- True overlay above the native video surface remains a future technical spike.
+- Current Phase 1 prioritizes working video and accessible controls over overlay-style UI fidelity.
+
+## 2026-05-14 - Timeline Seek And Minimal Fullscreen Pass
+
+Context:
+
+- Manual validation confirmed video, audio, and the bottom control bar.
+- Timeline looked awkward and seek snapped back after release.
+- Fullscreen was only nominal window fullscreen and did not feel like a player mode.
+
+Changed:
+
+- Increased timeline hit area and kept a stable layout.
+- Kept the timeline inside the bottom control bar.
+- Added a short post-seek polling grace period so stale mpv position reads do not immediately snap the slider back.
+- Kept seek on Hanuman `MpvContext.Seek(..., SeekOption.Absolute)`.
+- Added follow-up seek diagnostics after a short delay.
+- Added a minimal fullscreen mode that hides the header, keeps video/control bar visible, and toggles the fullscreen button text.
+
+Still Not Validated:
+
+- Manual confirmation that seek now moves playback.
+- Manual confirmation that fullscreen mode is acceptable.
+- Manual confirmation that resize keeps video and controls usable.
+- Manual confirmation that drag/drop still works with live playback.
+
+## 2026-05-14 - Command-Based Seek Diagnostics Pass
+
+Context:
+
+- Manual validation showed that video, audio, bottom controls, and minimal fullscreen improvements were present.
+- Timeline seek still did not move playback; the slider could be dragged but snapped back to the old position.
+- Seek became the primary blocker for the current controls pass.
+
+Changed:
+
+- Replaced the primary seek path with mpv command-based seek: `seek <seconds> absolute+exact` through Hanuman `RunCommand`.
+- Kept `time-pos` property assignment only as a fallback if the command path throws.
+- Added seek diagnostics for requested target seconds, duration, position before seek, command path, media filename, paused state, seekable state, and follow-up positions near 100 ms, 500 ms, and 1000 ms.
+- Added a simple pending seek model in `MainWindow` so polling keeps the requested target visible until mpv position reaches the target or a short timeout expires.
+- Kept fullscreen minimal: header hidden, bottom controls persistent and slightly compact, no immersive auto-hide behavior yet.
+
+Still Not Validated:
+
+- Manual confirmation that command-based seek actually moves playback.
+- Manual confirmation that time text and slider update after real seek.
+- Manual confirmation that fullscreen remains acceptable with persistent controls.
+
+Notes:
+
+- If command-based seek still does not move position, diagnostics should now distinguish duration problems, command exceptions, non-seekable media, and position-not-changing failures.
+
+## 2026-05-14 - Visible Seek Failure Diagnostics Pass
+
+Context:
+
+- Manual validation showed that seek still did not move playback.
+- The slider could be dragged, but playback stayed at the old position and the thumb returned.
+- Further UI-only seek polishing was explicitly avoided.
+
+Changed:
+
+- Added a temporary visible Phase 1 seek diagnostics block under the control bar.
+- Diagnostics show current duration, position, seekable state, paused state, pending target, mpv command path, last seek error, and last diagnostic message.
+- Added a temporary `+60s` debug seek button to separate slider/pending-value issues from mpv command/API issues.
+- Expanded the mpv seek implementation into a diagnostic fallback chain:
+  - pre-split `seek <seconds> absolute exact`;
+  - combined `seek <seconds> absolute+exact`;
+  - absolute-only seek;
+  - command-string seek;
+  - Hanuman `MpvContext.Seek`;
+  - direct `time-pos` assignment.
+- Added logs around open, stop, pending seek polling, command exceptions, and follow-up positions near 100 ms, 500 ms, and 1000 ms.
+
+Still Not Validated:
+
+- Whether any command variant actually moves playback on the current Windows/Hanuman/libmpv combination.
+- Whether `+60s` succeeds independently of the slider.
+
+Notes:
+
+- If seek still fails, the visible diagnostics should now show whether the media is non-seekable, duration is invalid, commands throw, or position simply does not change after commands complete.

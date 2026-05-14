@@ -60,7 +60,12 @@ Current validation status:
 - Local `libmpv-2.dll` was prepared through the dev helper.
 - Command-line media opening reaches pending queue, playback readiness, and libmpv `LoadFile` command dispatch when the path is correctly quoted.
 - Embedded video rendering has been manually confirmed.
-- Overlay controls, seek, volume, fullscreen, resize, and drag/drop still require visual/manual validation.
+- OpenGL renderer regression caused black video and was reverted.
+- Timeline hover jitter was fixed by keeping timeline height stable.
+- Phase 1 now uses a stable bottom control bar outside the native video surface.
+- Timeline hit area and fullscreen mode were improved for the bottom-control-bar path.
+- Seek now uses a diagnostic command fallback chain with pending-seek UI handling, a visible debug block, and a temporary `+60s` debug action, but still requires manual visual confirmation.
+- Volume, fullscreen, resize, and drag/drop still require visual/manual validation.
 
 Planned structure to review before creation:
 
@@ -125,7 +130,7 @@ Current blocker:
 
 - `HanumanInstitute.LibMpv.Avalonia` expects native `libmpv-2.dll` on Windows.
 - Dev-time native setup is available, but final Windows release packaging remains unimplemented.
-- Overlay z-order, seek, volume, fullscreen, resize behavior, and drag/drop with live playback still need manual validation with the prepared runtime.
+- Overlay z-order may remain limited by the Windows native video surface. True overlay rendering should be a separate future spike. Seek, volume, fullscreen, resize behavior, and drag/drop with live playback still need manual validation with the prepared runtime.
 - Native DLLs are not committed yet; distribution and licensing must be reviewed before bundled binaries are added.
 
 Current file input status:
@@ -161,7 +166,7 @@ Recommended first vertical slice, approved only for the current constrained spik
 - Show main media window.
 - Enter Video Presentation Mode.
 - Start libmpv playback.
-- Show overlay controls.
+- Show accessible playback controls.
 - Support timeline, play/pause, seek, volume, and fullscreen.
 
 This slice is video-first because it validates embedded rendering, overlay controls, fullscreen, native libmpv loading, timeline sync, resize behavior, and input interactions. Audio mode, playlists, metadata, tray, themes, equalizer, normalization, and video adjustments must not block it.

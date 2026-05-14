@@ -29,7 +29,15 @@ Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Ava
 - The app launched with a correctly quoted local video path from `E:\Downloads\Films`.
 - Playback surface diagnostics now show native runtime found, `MpvView` created, `MpvContext` non-null, `Ready` fired, pending media opened, and libmpv `LoadFile` command sent.
 - Embedded video rendering has been manually confirmed.
-- Playback controls, overlay behavior, fullscreen, resize, and drag/drop still need visual/manual validation.
+- OpenGL renderer caused a black-video regression and was reverted to Hanuman Auto/native renderer.
+- Overlay-over-video remains an unresolved risk with the native Windows surface.
+- Current Phase 1 UI uses a stable bottom control bar outside the native video surface instead of a true overlay.
+- Timeline hover height changes caused jitter and are disabled.
+- Timeline hit area and seek behavior have been adjusted, including pending seek UI state and command-based mpv seek diagnostics.
+- Seek is still not manually validated. A temporary visible Phase 1 diagnostics block and `+60s` debug seek action now exist to expose duration, position, seekable state, command path, exceptions, and post-command position changes.
+- Fullscreen mode now hides the header and keeps the bottom control bar visible.
+- Current fullscreen is a minimal Phase 1 window fullscreen with persistent, slightly compact controls, not the final immersive video fullscreen design.
+- Playback controls, seek, volume, fullscreen, resize, and drag/drop still need visual/manual validation.
 - Future Windows releases should aim to bundle native libmpv so normal users can launch Auralith without manually installing mpv/libmpv.
 - Native DLLs are not committed during the current spike because licensing, distribution shape, and packaging ownership still need explicit decisions.
 - File input app capability now exists for file picker, command-line media path, and single local file drag/drop.

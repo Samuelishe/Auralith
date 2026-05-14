@@ -31,11 +31,15 @@ Validated so far:
 - Playback surface readiness now reaches non-null `MpvContext`.
 - Correctly quoted command-line media paths are queued and opened after readiness.
 - Embedded video rendering has been manually confirmed.
+- OpenGL renderer caused a black-video regression on Windows and was reverted to the Hanuman Auto/native renderer path.
+- Current Phase 1 controls are in a stable bottom control bar because native video surface z-order hides Avalonia overlay controls.
+- Timeline seek now has temporary visible Phase 1 diagnostics and a `+60s` debug action because manual validation still showed seek failure.
+- Fullscreen is currently a minimal window fullscreen mode with persistent bottom controls, not the final immersive playback experience.
 
 Not yet validated:
 
-- Overlay z-order over active video.
-- Runtime seek/volume/timeline behavior with real media.
+- Runtime seek confirmation with real media after adding the diagnostic command fallback chain.
+- Runtime volume/timeline behavior with real media.
 - Fullscreen behavior with active video rendering.
 - Drag/drop with live playback.
 - Native libmpv packaging strategy.

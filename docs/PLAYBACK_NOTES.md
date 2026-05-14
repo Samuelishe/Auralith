@@ -63,13 +63,33 @@ Validated:
 - A local run with a correctly quoted video path from `E:\Downloads\Films` now reaches playback surface readiness.
 - Pending command-line media opens after readiness and sends the libmpv `LoadFile` command.
 - Embedded video rendering was manually confirmed by the project owner.
-- The current spike uses `VideoRenderer.OpenGl` so Avalonia overlay controls can render above the video surface.
+- The OpenGL overlay pass was reverted because it caused black video on Windows while audio continued.
+- The current spike uses Hanuman `VideoRenderer.Auto`, which selects the Windows native renderer and restores the previously confirmed video path.
+- Current Phase 1 controls are in a bottom control bar outside the native video surface so they remain accessible.
+- Bottom control bar is the current Phase 1 MVP control approach.
+- Timeline uses a stable layout and larger hit area instead of hover-driven resizing.
+- Fullscreen mode is minimal: hide the header, keep video and a slightly compact bottom control bar visible, and toggle the fullscreen button text.
+- Seek now uses a command-based mpv path first: `seek <seconds> absolute+exact` through `RunCommand`.
+- Seek diagnostics now try multiple narrow command variants:
+  - `RunCommand`: `seek <seconds> absolute exact`;
+  - `RunCommand`: `seek <seconds> absolute+exact`;
+  - `RunCommand`: `seek <seconds> absolute`;
+  - `RunCommandString`: `seek <seconds> absolute exact`;
+  - `MpvContext.Seek(..., SeekOption.Absolute)`;
+  - `SetPropertyDouble("time-pos", seconds)`.
+- The UI keeps a pending seek target visible until mpv reports a position near the target or a short timeout expires.
+- A temporary visible Phase 1 seek diagnostics block shows duration, position, seekable state, paused state, pending target, command path, and last seek error/message.
+- A temporary `+60s` debug seek button exists to separate slider issues from mpv command/API issues.
 
 Failed / blocked:
 
+- OpenGL renderer regression: audio worked, overlay was visible, but video was black during manual validation.
+- Overlay-over-video remains an unresolved technical risk when using the Windows native renderer because native surface z-order may not behave like a normal Avalonia visual.
 - Before adding the manifest, Avalonia `NativeControlHost` failed on Windows with: "Unable to create child window for native control host. Application manifest with supported OS list might be required."
 - The earlier 15-second process survival test validated only startup stability, not embedded playback.
-- Overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, drag/drop with real playback, and live video interactions still require visual/manual validation.
+- Seek, volume, fullscreen-with-video, drag/drop with real playback, and live video interactions still require visual/manual validation.
+- Timeline hover layout mutation caused visible jitter and has been disabled. Timeline height should remain stable in the current spike.
+- Seek still failed during manual validation after the first command-based pass. Current implementation is diagnostic-first: it shows seek facts in the UI and logs requested target seconds, duration, position before seek, seekable state, command path, media filename, paused state, command exceptions, and follow-up positions around 100 ms, 500 ms, and 1000 ms.
 
 Readiness finding:
 
@@ -127,6 +147,8 @@ Local validation result:
   - libmpv `LoadFile` command sent.
 - Visual playback, overlay, seek, volume, fullscreen, resize, and drag/drop still need human confirmation.
 - Video render itself has now been manually confirmed; the remaining visual checks are control behavior, overlay behavior, resize/fullscreen behavior, and drag/drop.
+- Seek now runs a diagnostic fallback chain instead of trusting one API path. The first attempt uses pre-split command arguments `seek`, target seconds, `absolute`, `exact`; later attempts try combined flags, absolute-only, command-string parsing, Hanuman `MpvContext.Seek`, and finally direct `time-pos` assignment.
+- True overlay rendering should be investigated in a separate future spike. Current Phase 1 prioritizes working video and reliable controls over overlay purity.
 
 Current Windows missing-runtime message should explain:
 

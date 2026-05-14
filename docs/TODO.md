@@ -57,8 +57,15 @@
 - [ ] Validate that the improved missing-runtime message is clear during a manual app launch.
 - [x] Add Windows application manifest required by Avalonia NativeControlHost.
 - [x] Validate embedded video rendering visually.
-- [ ] Validate overlay z-order above video.
-- [ ] Validate overlay idle show/hide behavior with live playback.
+- [x] Move Phase 1 controls out of native video overlay into a stable bottom control bar.
+- [ ] Investigate true overlay rendering over native video surface in a separate future spike.
+- [x] Revert OpenGL renderer after black-video regression.
+- [x] Disable timeline hover height mutation that caused layout jitter.
+- [ ] Validate seek after adding the diagnostic command fallback chain.
+- [x] Add seek polling grace period and follow-up seek diagnostics.
+- [x] Add pending seek UI state so polling does not immediately snap the slider back before mpv confirms or times out.
+- [x] Add visible temporary Phase 1 seek diagnostics and a `+60s` debug seek action.
+- [x] Add minimal fullscreen mode that hides header and keeps controls visible.
 - [x] Validate command-line pending media reaches libmpv `LoadFile` command dispatch.
 - [ ] Validate play/pause, seek, volume, duration/position updates visually.
 - [ ] Validate fullscreen and resize behavior.

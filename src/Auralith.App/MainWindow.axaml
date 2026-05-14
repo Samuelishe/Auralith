@@ -8,8 +8,22 @@
         MinWidth="780"
         MinHeight="460"
         Background="#08090B">
-  <Grid RowDefinitions="Auto,*">
-    <Border Background="#111318" Padding="8,6">
+  <Window.Styles>
+    <Style Selector="Slider.timeline">
+      <Setter Property="Height" Value="34" />
+    </Style>
+    <Style Selector="Slider.timeline /template/ Thumb#thumb">
+      <Setter Property="Width" Value="14" />
+      <Setter Property="Height" Value="14" />
+    </Style>
+    <Style Selector="Slider.timeline /template/ Track#PART_Track">
+      <Setter Property="Height" Value="6" />
+    </Style>
+  </Window.Styles>
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Border x:Name="HeaderBar"
+            Background="#111318"
+            Padding="8,6">
       <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
         <Button x:Name="OpenButton"
                 Content="Open"
@@ -43,58 +57,6 @@
                               Ready="PlaybackSurface_Ready"
                               Failed="PlaybackSurface_Failed" />
 
-      <Border x:Name="Overlay"
-              VerticalAlignment="Bottom"
-              Background="#B0000000"
-              Padding="14,12"
-              PointerEntered="Overlay_PointerEntered"
-              PointerExited="Overlay_PointerExited">
-        <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
-          <Slider x:Name="TimelineSlider"
-                  Minimum="0"
-                  Maximum="1"
-                  Value="0"
-                  PointerEntered="TimelineSlider_PointerEntered"
-                  PointerExited="TimelineSlider_PointerExited"
-                  PointerPressed="TimelineSlider_PointerPressed"
-                  PointerReleased="TimelineSlider_PointerReleased"
-                  PropertyChanged="TimelineSlider_PropertyChanged" />
-
-          <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="12">
-            <Button x:Name="PlayPauseButton"
-                    Content="Play"
-                    Click="PlayPauseButton_Click"
-                    MinWidth="72" />
-            <Button x:Name="StopButton"
-                    Grid.Column="1"
-                    Content="Stop"
-                    Click="StopButton_Click"
-                    MinWidth="72" />
-            <TextBlock x:Name="TimeText"
-                       Grid.Column="2"
-                       Foreground="#E7E9EE"
-                       VerticalAlignment="Center"
-                       Text="00:00 / 00:00" />
-            <TextBlock Grid.Column="3"
-                       Foreground="#AEB4C0"
-                       VerticalAlignment="Center"
-                       Text="Volume" />
-            <Slider x:Name="VolumeSlider"
-                    Grid.Column="4"
-                    Width="150"
-                    Minimum="0"
-                    Maximum="100"
-                    Value="70"
-                    PropertyChanged="VolumeSlider_PropertyChanged" />
-            <Button x:Name="FullscreenButton"
-                    Grid.Column="5"
-                    Content="Fullscreen"
-                    Click="FullscreenButton_Click"
-                    MinWidth="96" />
-          </Grid>
-        </Grid>
-      </Border>
-
       <Border x:Name="ContextMenuNotice"
               HorizontalAlignment="Right"
               VerticalAlignment="Top"
@@ -106,5 +68,68 @@
         <TextBlock Foreground="#E7E9EE" Text="Context menu placeholder" />
       </Border>
     </Grid>
+
+    <Border Grid.Row="2"
+            x:Name="ControlBar"
+            Background="#111318"
+            Padding="14,10">
+      <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
+        <Slider x:Name="TimelineSlider"
+                Classes="timeline"
+                Minimum="0"
+                Maximum="1"
+                Value="0"
+                PointerPressed="TimelineSlider_PointerPressed"
+                PointerReleased="TimelineSlider_PointerReleased"
+                PointerCaptureLost="TimelineSlider_PointerCaptureLost"
+                PropertyChanged="TimelineSlider_PropertyChanged" />
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="12">
+          <Button x:Name="PlayPauseButton"
+                  Content="Play"
+                  Click="PlayPauseButton_Click"
+                  MinWidth="72" />
+          <Button x:Name="StopButton"
+                  Grid.Column="1"
+                  Content="Stop"
+                  Click="StopButton_Click"
+                  MinWidth="72" />
+          <Button x:Name="DebugSeekForwardButton"
+                  Grid.Column="2"
+                  Content="+60s"
+                  Click="DebugSeekForwardButton_Click"
+                  MinWidth="72" />
+          <TextBlock x:Name="TimeText"
+                     Grid.Column="3"
+                     Foreground="#E7E9EE"
+                     VerticalAlignment="Center"
+                     Text="00:00 / 00:00" />
+          <TextBlock Grid.Column="4"
+                     Foreground="#AEB4C0"
+                     VerticalAlignment="Center"
+                     Text="Volume" />
+          <Slider x:Name="VolumeSlider"
+                  Grid.Column="5"
+                  Width="150"
+                  Minimum="0"
+                  Maximum="100"
+                  Value="70"
+                  PropertyChanged="VolumeSlider_PropertyChanged" />
+          <Button x:Name="FullscreenButton"
+                  Grid.Column="6"
+                  Content="Fullscreen"
+                  Click="FullscreenButton_Click"
+                  MinWidth="96" />
+        </Grid>
+
+        <TextBlock x:Name="SeekDebugText"
+                   Grid.Row="2"
+                   Foreground="#8E96A3"
+                   FontFamily="Consolas"
+                   FontSize="11"
+                   TextWrapping="Wrap"
+                   Text="Seek diagnostics: waiting for playback session" />
+      </Grid>
+    </Border>
   </Grid>
 </Window>
