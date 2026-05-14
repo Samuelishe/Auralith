@@ -34,6 +34,8 @@ Out of scope:
 - Separate audio/video player projects.
 - Playback engine.
 - libmpv integration.
+- NuGet package installation.
+- Placeholder interfaces/classes/services/viewmodels.
 - MVVM structure.
 - DI setup.
 - SQLite layer.

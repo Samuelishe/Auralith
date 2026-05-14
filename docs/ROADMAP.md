@@ -21,9 +21,11 @@ Exit criteria:
 - Rider solution shows documentation items.
 - Initial decisions, state, roadmap, and session log exist.
 
-## Phase 1 - Project Skeleton
+## Phase 1 - Structure And Spike Preparation
 
 Status: Future
+
+Phase 1 is not implementation approval. It remains planning work for structure, dependencies, spike preparation, and build/test strategy.
 
 Possible goals:
 
@@ -32,6 +34,8 @@ Possible goals:
 - Define build/test baseline.
 - Define dependency policy.
 - Define first vertical slice.
+- Define playback spike acceptance criteria.
+- Define native libmpv loading and packaging expectations.
 - Create project structure only after explicit approval.
 - Add Avalonia application project only after explicit approval.
 - Establish formatting and build verification.
@@ -57,6 +61,8 @@ tests/
 
 Avoid separate `Auralith.AudioPlayer` and `Auralith.VideoPlayer` projects.
 
+Avoid adding more layers before implementation pressure exists.
+
 ## Phase 2 - UI Direction Prototype
 
 Status: Future
@@ -75,12 +81,22 @@ Status: Future
 
 Possible goals:
 
-- Investigate libmpv integration options.
+- Investigate `HanumanInstitute.LibMpv` and `HanumanInstitute.LibMpv.Avalonia` as primary playback spike candidates.
+- Consider `MPVSharp` or manual P/Invoke only if the primary candidates fail badly.
 - Validate cross-platform packaging implications.
 - Identify playback API boundaries.
 - Validate thin playback abstraction and event/property mapping.
+- Validate embedded Avalonia rendering, overlay z-order, resize/fullscreen behavior, timeline sync, and direct video surface interactions.
+- Validate subtitle/audio track enumeration and switching.
 - Investigate libmpv support for audio filters, equalizer, normalization, dynamic range compression, and replaygain/loudness options.
 - Investigate libmpv support for video adjustments.
+
+Avoid as primary direction:
+
+- `Mpv.NET`.
+- `LibVLCSharp`.
+- Avalonia Pro `MediaPlayer`.
+- Large custom playback engine before validation.
 
 ## Phase 4 - Application Foundation
 

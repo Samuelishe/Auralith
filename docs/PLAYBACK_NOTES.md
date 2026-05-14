@@ -11,6 +11,35 @@ Playback direction is known, but playback architecture is not implemented yet.
 - Playback Queue is the primary runtime model.
 - Playlists may feed the queue, but queue owns next/previous, shuffle, and history behavior.
 - Metadata loading must not block playback: open file, start playback quickly, then enrich metadata asynchronously.
+- Auralith should not drift toward VLC-centric architecture unless major playback validation fails.
+
+## Playback Spike Candidates
+
+Primary candidates:
+
+- `HanumanInstitute.LibMpv`
+- `HanumanInstitute.LibMpv.Avalonia`
+
+Reasoning:
+
+- Better fit for Avalonia + libmpv direction.
+- Suitable for embedded playback experiments.
+- Reduces need for immediate manual native interop work.
+- Likely faster path toward validating playback architecture assumptions.
+
+This is a playback spike candidate, not a permanent irreversible dependency commitment.
+
+Fallback candidates:
+
+- `MPVSharp`.
+- Manual P/Invoke layer only if existing bindings fail badly.
+
+Avoid as primary direction:
+
+- `Mpv.NET`.
+- `LibVLCSharp`.
+- Avalonia Pro `MediaPlayer`.
+- Large custom playback engine before validation.
 
 ## Thin Playback Abstraction
 
@@ -28,6 +57,64 @@ Expected future surface:
 - Audio track selection.
 - Events/properties mapped from libmpv where useful.
 
+UI layers must not depend directly on concrete libmpv binding APIs. Binding-specific code belongs behind future playback boundaries, most likely in `Auralith.Playback.Mpv`.
+
+## Playback Spike Acceptance Criteria
+
+Playback:
+
+- Open media file.
+- Video playback.
+- Audio playback.
+- Play, pause, and stop.
+- Seek.
+- Smooth timeline updates.
+- Duration/position sync.
+- Volume control.
+- Fullscreen.
+- Resize behavior.
+
+Video surface:
+
+- Embedded rendering inside Avalonia.
+- Overlay controls above video.
+- Z-order behavior.
+- Click play/pause.
+- Double-click fullscreen.
+- Future interaction feasibility.
+
+Tracks/subtitles:
+
+- Subtitle enumeration.
+- Subtitle switching.
+- External subtitle loading feasibility.
+- Audio track enumeration.
+- Audio track switching.
+
+Performance:
+
+- Acceptable CPU usage.
+- Acceptable GPU/render behavior.
+- No obvious rendering instability.
+
+Platform:
+
+- Native library loading on Windows.
+- Native library loading on Linux.
+- Packaging implications.
+- Bundled versus system libmpv behavior.
+
+Processing feasibility:
+
+- Equalizer support.
+- Replaygain/loudness normalization.
+- Dynamic range compression/dialogue clarity.
+- Brightness.
+- Contrast.
+- Saturation.
+- Gamma.
+- Possible sharpness.
+
 ## Future Concerns
 
 - libmpv lifecycle ownership.
@@ -44,6 +131,23 @@ Expected future surface:
 - Audio normalization, replaygain, loudness normalization, dynamic range compression, and dialogue clarity options.
 - Video adjustment support for brightness, contrast, saturation, gamma, and possibly sharpness.
 - Clear UX boundaries for processing controls so they do not become settings clutter.
+- Native packaging and runtime dependency handling.
+
+## Preliminary Packaging Direction
+
+Native packaging and runtime dependency handling are expected to be one of the highest-risk technical areas of the project.
+
+Windows:
+
+- Bundled native libmpv is preferred.
+- Users should not manually install mpv.
+- Windows 11 receives the highest polish priority.
+
+Linux / Arch:
+
+- Initial direction may rely on system libmpv.
+- Future AppImage/Flatpak investigation is possible.
+- Linux desktop integration limitations should be documented honestly.
 
 ## Media Processing Planning
 
@@ -71,7 +175,11 @@ Do not implement processing controls before the libmpv playback spike confirms c
 - No playback wrapper.
 - No mpv binding choice.
 - No playback service.
+- No NuGet package installation.
 - No universal media engine abstraction.
+- No backend-agnostic abstraction tree.
+- No plugin-based playback backend system.
+- No speculative transport orchestration layer.
 - No test media fixtures.
 - No native dependency packaging.
 - No equalizer, normalization, dynamic range, or video adjustment implementation.

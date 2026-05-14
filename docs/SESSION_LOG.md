@@ -92,3 +92,29 @@ Next:
 - Investigate libmpv audio/video processing capabilities.
 - Investigate Avalonia/system tray cross-platform options.
 - Define video interaction conflict rules before UI implementation.
+
+## 2026-05-14 - Playback Integration And Phase 1 Planning
+
+Context:
+
+- The project owner refined playback integration strategy and Phase 1 planning boundaries.
+- The project remains documentation/planning only.
+
+Changed:
+
+- Documented `HanumanInstitute.LibMpv` and `HanumanInstitute.LibMpv.Avalonia` as primary playback spike candidates.
+- Added fallback/avoid lists for playback integration options.
+- Added dependency isolation rules so UI layers do not depend directly on concrete libmpv APIs.
+- Added playback spike acceptance criteria, native packaging direction, and Phase 1 planning constraints.
+- Recorded native packaging risk and vertical-slice-first architecture guidance.
+
+Notes:
+
+- No dependencies, projects, placeholders, or production code should be created in Phase 0.
+- Playback architecture must remain thin and evidence-driven until the spike validates assumptions.
+
+Next:
+
+- Finalize playback spike acceptance criteria.
+- Define native libmpv loading and packaging strategy for Windows and Linux.
+- Define shell, overlay, transport, timeline, fullscreen, tray, and interaction ownership boundaries.

@@ -40,6 +40,8 @@ Not allowed now:
 - No database layer.
 - No DI setup.
 - No MVVM scaffolding.
+- No NuGet package installation.
+- No placeholder interfaces/classes/services/viewmodels.
 - No fake placeholders created only to show progress.
 - No production code without an explicit phase change.
 

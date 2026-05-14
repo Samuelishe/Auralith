@@ -19,6 +19,15 @@
 - [ ] Define dependency policy for native libmpv distribution on Windows/Linux.
 - [ ] Define initial UI token taxonomy.
 - [ ] Define playback spike questions.
+- [ ] Finalize playback spike acceptance criteria.
+- [ ] Define native libmpv loading strategy.
+- [ ] Define Windows packaging expectations.
+- [ ] Define Arch Linux system dependency expectations.
+- [ ] Define shell ownership boundaries.
+- [ ] Define overlay layering strategy.
+- [ ] Define future vertical slice boundaries.
+- [ ] Define minimal playback abstraction surface.
+- [ ] Investigate Avalonia/mpv overlay compatibility risks.
 - [ ] Investigate libmpv support for audio filters/equalizer/normalization.
 - [ ] Investigate libmpv support for video adjustments.
 - [ ] Investigate Avalonia/system tray cross-platform options.

@@ -354,3 +354,96 @@ Consequences:
 - This priority may guide feature polish and fallback behavior.
 - It must not justify careless Windows-only architecture.
 - Platform-specific limitations should be documented honestly.
+
+## 2026-05-14 - Primary libmpv Spike Candidate
+
+Status: Accepted
+
+Context:
+
+Auralith needs to validate embedded libmpv playback in Avalonia before architecture solidifies.
+
+Decision:
+
+Use `HanumanInstitute.LibMpv` and `HanumanInstitute.LibMpv.Avalonia` as the primary playback spike candidates.
+
+Consequences:
+
+- This is not a permanent irreversible dependency commitment.
+- `MPVSharp` remains a fallback candidate.
+- Manual P/Invoke should be considered only if existing bindings fail badly.
+- Avoid `Mpv.NET`, `LibVLCSharp`, Avalonia Pro `MediaPlayer`, and large custom playback engines as primary direction.
+- The project should not drift toward VLC-centric architecture unless major playback validation fails.
+
+## 2026-05-14 - Isolate Concrete libmpv Bindings
+
+Status: Accepted
+
+Context:
+
+The UI should not become coupled to a specific mpv binding package.
+
+Decision:
+
+UI layers must not directly depend on concrete libmpv APIs. Concrete binding usage should stay behind playback boundaries, primarily in future `Auralith.Playback.Mpv`.
+
+Consequences:
+
+- Replacing the mpv binding should primarily affect `Auralith.Playback.Mpv`.
+- Playback abstractions should remain thin and practical.
+- Do not create backend-agnostic abstraction trees before evidence proves a real need.
+
+## 2026-05-14 - Native Packaging Is A Major Risk Area
+
+Status: Accepted
+
+Context:
+
+libmpv requires native runtime dependency handling, and platform behavior differs between Windows and Linux.
+
+Decision:
+
+Treat native packaging and runtime dependency loading as one of the highest-risk technical areas of the project.
+
+Consequences:
+
+- Windows should prefer bundled native libmpv so users do not manually install mpv.
+- Linux/Arch may initially rely on system libmpv.
+- Future AppImage/Flatpak investigation is possible.
+- Packaging assumptions must be validated during playback spike planning.
+
+## 2026-05-14 - Thin Evidence-Driven Playback Abstraction
+
+Status: Accepted
+
+Context:
+
+Speculative playback abstractions can become architecture theatre before real libmpv constraints are known.
+
+Decision:
+
+Playback abstraction should stay thin and evidence-driven, emerging from validated use cases and vertical slices.
+
+Consequences:
+
+- Do not create `IUniversalMediaEngine`.
+- Do not create plugin-based playback backends or speculative transport orchestration layers.
+- Avoid pretending the project is backend-agnostic before implementation evidence exists.
+
+## 2026-05-14 - Vertical Slices Over Architectural Purity
+
+Status: Accepted
+
+Context:
+
+MVVM complexity and speculative infrastructure growth are known future risks.
+
+Decision:
+
+Favor vertical slices and practical boundaries over architectural purity.
+
+Consequences:
+
+- Phase 1 should remain structure planning, dependency planning, spike preparation, and build/test strategy planning.
+- Do not create placeholder interfaces, classes, services, view models, DI setup, or MVVM scaffolding during planning.
+- Add layers only when implementation pressure proves they remove real complexity.
