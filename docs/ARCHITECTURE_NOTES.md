@@ -45,7 +45,17 @@ tests/
 
 Do not create `Auralith.AudioPlayer` or `Auralith.VideoPlayer` projects. Audio and video are presentation modes of the same player shell, not separate applications.
 
-Do not create these projects yet. Avoid adding more layers before implementation pressure exists.
+Do not create these projects yet. Avoid adding more layers before implementation pressure exists. When code work is explicitly approved, prefer the smallest useful starting set:
+
+```text
+src/
+  Auralith.App/
+  Auralith.Core/
+  Auralith.Playback/
+  Auralith.Playback.Mpv/
+```
+
+Add `Auralith.Media`, `Auralith.UI`, `Auralith.UI.DesignSystem`, `Auralith.Infrastructure`, and test projects only when real implementation pressure exists. Do not create empty semantic projects for architectural appearance.
 
 ## Future Dependency Direction
 
@@ -88,6 +98,50 @@ Before implementation, prepare documentation around:
 - Tray ownership.
 - Window lifecycle.
 - Interaction conflict matrix.
+
+## Preliminary Ownership Model
+
+This is planning guidance, not implemented architecture.
+
+`MainWindow` owns:
+
+- Window state.
+- Fullscreen state.
+- Window size and position.
+- Active presentation mode.
+
+`MediaShell` owns:
+
+- Composition of presentation modes.
+- Switching between Video Presentation Mode and Audio Presentation Mode.
+- Shared transport area placement.
+
+`PlaybackSession` owns:
+
+- Current media.
+- Playback state.
+- Position.
+- Duration.
+- Volume.
+- Track lists.
+- Subtitle state.
+- Media state/events.
+
+`PlaybackQueue` owns:
+
+- Current queue item.
+- Next/previous.
+- History.
+- Future shuffle/repeat behavior.
+
+`VideoPresentation` owns:
+
+- Overlay visibility.
+- Video surface interaction behavior.
+- Idle timer.
+- Local video UX state.
+
+Fullscreen is window/shell state, not playback engine state. The playback engine should not know why the user toggled fullscreen. It should expose playback facts and commands, not UI intent.
 
 ## Future Questions
 

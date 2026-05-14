@@ -35,6 +35,8 @@ Metadata enrichment from the internet remains an optional future provider/plugin
 
 Audio equalizer and normalization features are planned but must wait for the libmpv playback spike. Normalization should distinguish music loudness normalization from video-oriented dynamic range compression/dialogue clarity.
 
+Tray support is planned especially for audio/background playback, but it is not MVP for the first video slice. Tray behavior belongs later with audio/background playback work.
+
 ## Current Non-Goals
 
 - No audio presentation implementation.

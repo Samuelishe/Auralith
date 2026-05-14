@@ -118,3 +118,28 @@ Next:
 - Finalize playback spike acceptance criteria.
 - Define native libmpv loading and packaging strategy for Windows and Linux.
 - Define shell, overlay, transport, timeline, fullscreen, tray, and interaction ownership boundaries.
+
+## 2026-05-14 - Phase 1 Planning Decisions
+
+Context:
+
+- The project owner approved specific Phase 1 planning decisions while keeping the repository documentation-only.
+- No implementation, packages, projects, or placeholders were requested.
+
+Changed:
+
+- Fixed playback binding strategy around `HanumanInstitute.LibMpv` / `HanumanInstitute.LibMpv.Avalonia`, with `MPVSharp` as fallback and manual P/Invoke as last resort.
+- Recorded the planned solution structure and minimal first skeleton guidance.
+- Accepted the video-first vertical slice recommendation.
+- Added preliminary ownership model for `MainWindow`, `MediaShell`, `PlaybackSession`, `PlaybackQueue`, and `VideoPresentation`.
+- Confirmed shared `AuralithTimeline`, tray deferral, packaging direction, and processing-feature validation boundaries.
+
+Notes:
+
+- Phase 0 is close to completion, but implementation has not started.
+- Phase 1 may begin only after explicit user approval.
+
+Next:
+
+- Review Phase 1 readiness.
+- Keep first implementation limited to minimal skeleton and the recommended video-first slice when approved.

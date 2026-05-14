@@ -11,7 +11,10 @@ Video Presentation Mode lives inside the unified media shell. It should feel mod
 - Minimal overlay controls.
 - Overlay controls that appear on mouse move/hover and disappear when idle.
 - Single click/tap on video toggles play/pause.
-- Double click on video toggles fullscreen.
+- Double left click on video toggles fullscreen.
+- Right click opens context menu.
+- Mouse movement shows overlay controls.
+- Idle timeout hides overlay controls.
 - Future hold-to-seek zones: hold right side for accelerated forward seek, hold left side for accelerated backward seek.
 - Modern timeline interaction.
 - Subtitle selection.
@@ -34,6 +37,8 @@ Advanced video actions should be available through a right-click context menu ra
 
 Direct video interactions must be conflict-aware. Click, double-click, and future hold gestures should not interfere with subtitle selection, context menus, drag/window move behavior, overlay controls, or text selection.
 
+Overlay controls have priority over video surface gestures. Right-click context menu has priority over click gestures. Double click must not leave incorrect single-click side effects. Drag/window movement on the video surface should be restricted or explicitly designed.
+
 Video equalizer/adjustment controls are planned, but must not be implemented until the playback spike confirms libmpv capabilities and the UX boundary is clear.
 
 ## Current Non-Goals
@@ -43,3 +48,5 @@ Video equalizer/adjustment controls are planned, but must not be implemented unt
 - No fullscreen behavior.
 - No subtitle implementation.
 - No video adjustment implementation.
+- No hold-to-seek implementation in the first slice.
+- No waveform, preview thumbnail, chapter, or advanced buffered timeline visualization.

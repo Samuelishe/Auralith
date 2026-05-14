@@ -355,6 +355,113 @@ Consequences:
 - It must not justify careless Windows-only architecture.
 - Platform-specific limitations should be documented honestly.
 
+## 2026-05-14 - Planned Phase 1 Solution Structure
+
+Status: Accepted
+
+Context:
+
+The project needs a direction for future project structure without creating empty projects prematurely.
+
+Decision:
+
+Use the documented Phase 1 structure as planning direction:
+
+```text
+src/
+  Auralith.App/
+  Auralith.Core/
+  Auralith.Playback/
+  Auralith.Playback.Mpv/
+  Auralith.Media/
+  Auralith.UI/
+  Auralith.UI.DesignSystem/
+  Auralith.Infrastructure/
+
+tests/
+  Auralith.Core.Tests/
+  Auralith.Playback.Tests/
+```
+
+Consequences:
+
+- This is not implemented architecture.
+- Do not create all projects immediately.
+- When code work is approved, prefer the minimal first set: `Auralith.App`, `Auralith.Core`, `Auralith.Playback`, and `Auralith.Playback.Mpv`.
+- Add remaining projects only when implementation pressure exists.
+- Do not create `Auralith.AudioPlayer`, `Auralith.VideoPlayer`, or empty semantic projects for appearance.
+
+## 2026-05-14 - Recommended First Vertical Slice
+
+Status: Accepted
+
+Context:
+
+The first implementation slice should validate the highest-risk assumptions before broader application growth.
+
+Decision:
+
+The recommended first slice is video-first: open video file -> main media shell -> Video Presentation Mode -> libmpv playback -> overlay controls -> play/pause -> seek -> volume -> fullscreen.
+
+Consequences:
+
+- This slice validates embedded rendering, overlay controls, fullscreen, native libmpv loading, timeline sync, resize behavior, and input interactions.
+- Audio mode, playlists, metadata, tray, themes, equalizer, normalization, and video adjustments remain planned but must not block the first slice.
+- This is a recommendation for future approved implementation, not current authorization to implement.
+
+## 2026-05-14 - Preliminary Shell And Playback Ownership Model
+
+Status: Accepted
+
+Context:
+
+Ownership boundaries need to be explicit before implementation to avoid playback/UI coupling.
+
+Decision:
+
+Use the preliminary ownership model documented in `ARCHITECTURE_NOTES.md`: `MainWindow` owns window/fullscreen/size/position/active mode; `MediaShell` owns presentation composition and switching; `PlaybackSession` owns playback facts and commands; `PlaybackQueue` owns runtime queue navigation; `VideoPresentation` owns local video UX state.
+
+Consequences:
+
+- Fullscreen is window/shell state, not playback engine state.
+- Playback engine should expose playback facts and commands, not UI intent.
+- Ownership may be refined by implementation evidence, but this is the starting planning model.
+
+## 2026-05-14 - Shared Timeline Concept
+
+Status: Accepted
+
+Context:
+
+Audio and video should not duplicate timeline behavior unnecessarily.
+
+Decision:
+
+Use one shared timeline concept/control, `AuralithTimeline`, with mode-specific visual styling such as `VideoTimelineStyle` and `AudioTimelineStyle`.
+
+Consequences:
+
+- MVP timeline scope is progress, seek, hover affordance, thin idle video style, and more visible hover/active state.
+- Do not implement waveform, preview thumbnails, chapters, or advanced buffered visualization in the first slice.
+
+## 2026-05-14 - Tray Is Planned But Not First Video Slice MVP
+
+Status: Accepted
+
+Context:
+
+Tray support is useful for audio/background playback, but the first slice is video-first.
+
+Decision:
+
+Tray support is planned, especially for audio playback, but is not MVP for the first video slice.
+
+Consequences:
+
+- Windows 11 remains the primary polish target, Windows 10 secondary, and Linux/Arch best effort.
+- Tray behavior belongs later with audio/background playback work.
+- Linux desktop environment differences must be documented honestly.
+
 ## 2026-05-14 - Primary libmpv Spike Candidate
 
 Status: Accepted
@@ -371,7 +478,7 @@ Consequences:
 
 - This is not a permanent irreversible dependency commitment.
 - `MPVSharp` remains a fallback candidate.
-- Manual P/Invoke should be considered only if existing bindings fail badly.
+- Manual P/Invoke over libmpv is a last resort if existing bindings fail badly.
 - Avoid `Mpv.NET`, `LibVLCSharp`, Avalonia Pro `MediaPlayer`, and large custom playback engines as primary direction.
 - The project should not drift toward VLC-centric architecture unless major playback validation fails.
 

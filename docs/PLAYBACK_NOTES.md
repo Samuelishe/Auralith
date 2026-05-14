@@ -29,10 +29,13 @@ Reasoning:
 
 This is a playback spike candidate, not a permanent irreversible dependency commitment.
 
-Fallback candidates:
+Fallback:
 
 - `MPVSharp`.
-- Manual P/Invoke layer only if existing bindings fail badly.
+
+Last resort:
+
+- Manual P/Invoke over libmpv only if existing bindings fail badly.
 
 Avoid as primary direction:
 
@@ -146,6 +149,7 @@ Windows:
 Linux / Arch:
 
 - Initial direction may rely on system libmpv.
+- On Arch Linux, system `libmpv` installed through the package manager is an acceptable initial direction.
 - Future AppImage/Flatpak investigation is possible.
 - Linux desktop integration limitations should be documented honestly.
 
@@ -169,6 +173,34 @@ Video processing should investigate:
 - Sharpness if backend support is practical.
 
 Do not implement processing controls before the libmpv playback spike confirms capabilities, performance implications, and UX boundaries.
+
+## First Slice Boundaries
+
+Recommended first implementation slice, after explicit approval:
+
+```text
+Open video file
+-> MainWindow / unified media shell
+-> Video Presentation Mode
+-> libmpv playback
+-> overlay controls
+-> play/pause
+-> seek
+-> volume
+-> fullscreen
+```
+
+Video-first is recommended because it validates the riskiest areas:
+
+- Embedded rendering.
+- Overlay controls.
+- Fullscreen.
+- Native libmpv loading.
+- Timeline sync.
+- Resize behavior.
+- Input interactions.
+
+Audio mode, playlists, metadata, tray behavior, themes, equalizer, normalization, and video adjustments remain future/planned work. They should inform boundaries but must not block the first slice.
 
 ## Non-Goals For Current Phase
 

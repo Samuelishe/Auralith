@@ -6,6 +6,8 @@ This roadmap is phase-oriented. It is not a promise that every future idea will 
 
 Status: Active
 
+Phase 0 documentation foundation is close to completion, but implementation has not started.
+
 Goals:
 
 - Create project documentation foundation.
@@ -63,6 +65,15 @@ Avoid separate `Auralith.AudioPlayer` and `Auralith.VideoPlayer` projects.
 
 Avoid adding more layers before implementation pressure exists.
 
+When implementation is explicitly approved, the first code step should be minimal skeleton creation, not full architecture buildout. Preferred initial set:
+
+- `src/Auralith.App`
+- `src/Auralith.Core`
+- `src/Auralith.Playback`
+- `src/Auralith.Playback.Mpv`
+
+Other planned projects should wait until real implementation pressure exists.
+
 ## Phase 2 - UI Direction Prototype
 
 Status: Future
@@ -107,7 +118,7 @@ Possible goals:
 - Implement the first real application slice.
 - Introduce MVVM, DI, logging, and persistence only where needed.
 
-Candidate first vertical slice, not approved for implementation yet:
+Recommended first vertical slice, not approved for implementation yet:
 
 - Open video file.
 - Show main media window.
@@ -115,6 +126,8 @@ Candidate first vertical slice, not approved for implementation yet:
 - Start libmpv playback.
 - Show overlay controls.
 - Support timeline, play/pause, seek, volume, and fullscreen.
+
+This slice is video-first because it validates embedded rendering, overlay controls, fullscreen, native libmpv loading, timeline sync, resize behavior, and input interactions. Audio mode, playlists, metadata, tray, themes, equalizer, normalization, and video adjustments must not block it.
 
 ## Phase 5 - Feature Growth
 

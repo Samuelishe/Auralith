@@ -24,8 +24,10 @@
 - [ ] Define Windows packaging expectations.
 - [ ] Define Arch Linux system dependency expectations.
 - [ ] Define shell ownership boundaries.
+- [ ] Define MainWindow, MediaShell, PlaybackSession, PlaybackQueue, and VideoPresentation ownership boundaries.
 - [ ] Define overlay layering strategy.
 - [ ] Define future vertical slice boundaries.
+- [ ] Define minimal first skeleton scope: App/Core/Playback/Playback.Mpv only.
 - [ ] Define minimal playback abstraction surface.
 - [ ] Investigate Avalonia/mpv overlay compatibility risks.
 - [ ] Investigate libmpv support for audio filters/equalizer/normalization.
