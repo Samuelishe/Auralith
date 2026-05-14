@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Auralith.Core;
 using Auralith.Playback;
 using Auralith.Playback.Mpv;
 using Avalonia.Controls;
@@ -16,13 +19,21 @@ public sealed partial class MainWindow : Window
     private readonly DispatcherTimer _positionTimer;
     private readonly DispatcherTimer _overlayIdleTimer;
     private readonly DispatcherTimer _contextNoticeTimer;
+    private MediaOpenRequest? _pendingOpenRequest;
     private IPlaybackSession? _playback;
+    private string? _playbackFailureMessage;
     private bool _isSeeking;
     private bool _overlayPinned;
     private bool _suppressVolumeChange;
 
     public MainWindow()
+        : this(null)
     {
+    }
+
+    public MainWindow(MediaOpenRequest? startupOpenRequest)
+    {
+        _pendingOpenRequest = startupOpenRequest;
         InitializeComponent();
 
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
@@ -40,12 +51,20 @@ public sealed partial class MainWindow : Window
     private void PlaybackSurface_Ready(object? sender, PlaybackSurfaceReadyEventArgs e)
     {
         _playback = e.PlaybackSession;
+        _playbackFailureMessage = null;
         _playback.Volume = VolumeSlider.Value;
         _positionTimer.Start();
+
+        if (_pendingOpenRequest is not null)
+        {
+            OpenMedia(_pendingOpenRequest);
+            _pendingOpenRequest = null;
+        }
     }
 
     private void PlaybackSurface_Failed(object? sender, PlaybackSurfaceFailedEventArgs e)
     {
+        _playbackFailureMessage = e.Message;
         MediaPathText.Text = e.Message;
     }
 
@@ -58,7 +77,7 @@ public sealed partial class MainWindow : Window
     {
         if (_playback is null)
         {
-            MediaPathText.Text = "Playback surface is not ready yet";
+            MediaPathText.Text = _playbackFailureMessage ?? "Playback surface is not ready yet";
             return;
         }
 
@@ -80,9 +99,13 @@ public sealed partial class MainWindow : Window
             return;
         }
 
-        _playback.Open(path);
-        MediaPathText.Text = Path.GetFileName(path);
-        ShowOverlay();
+        if (!MediaOpenRequest.TryCreate(path, out var request, out var error))
+        {
+            MediaPathText.Text = error;
+            return;
+        }
+
+        OpenMedia(request);
     }
 
     private void PlayPauseButton_Click(object? sender, RoutedEventArgs e)
@@ -122,6 +145,35 @@ public sealed partial class MainWindow : Window
     private void VideoSurface_DoubleTapped(object? sender, TappedEventArgs e)
     {
         ToggleFullscreen();
+        e.Handled = true;
+    }
+
+    private void VideoSurface_DragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = e.DataTransfer.Contains(DataFormat.File)
+            ? DragDropEffects.Copy
+            : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    private void VideoSurface_Drop(object? sender, DragEventArgs e)
+    {
+        var path = GetSingleDroppedFile(e);
+        if (path is null)
+        {
+            MediaPathText.Text = "Drop exactly one local media file for this spike";
+            e.Handled = true;
+            return;
+        }
+
+        if (!MediaOpenRequest.TryCreate(path, out var request, out var error))
+        {
+            MediaPathText.Text = error;
+            e.Handled = true;
+            return;
+        }
+
+        OpenMedia(request);
         e.Handled = true;
     }
 
@@ -233,6 +285,36 @@ public sealed partial class MainWindow : Window
         _playback.Seek(TimeSpan.FromSeconds(TimelineSlider.Value));
     }
 
+    private void OpenMedia(MediaOpenRequest? request)
+    {
+        if (request is null)
+        {
+            return;
+        }
+
+        if (_playback is null)
+        {
+            _pendingOpenRequest = request;
+            MediaPathText.Text = _playbackFailureMessage ?? "Playback surface is not ready yet";
+            return;
+        }
+
+        _playback.Open(request.Path);
+        MediaPathText.Text = Path.GetFileName(request.Path);
+        ShowOverlay();
+    }
+
+    private static string? GetSingleDroppedFile(DragEventArgs e)
+    {
+        var files = e.DataTransfer.TryGetFiles();
+        var paths = files?
+            .Select(x => x.TryGetLocalPath())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Cast<string>()
+            .ToArray();
+
+        return paths is [var singlePath] ? singlePath : null;
+    }
     private void UpdatePlaybackState()
     {
         if (_playback is null)

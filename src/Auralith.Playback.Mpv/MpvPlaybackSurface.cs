@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using HanumanInstitute.LibMpv.Core;
 using HanumanInstitute.LibMpv.Avalonia;
 
 namespace Auralith.Playback.Mpv;
@@ -21,9 +22,10 @@ public sealed class MpvPlaybackSurface : ContentControl
 
     private void InitializeSurface()
     {
-        if (!CanLoadMpvNative())
+        var nativeStatus = NativeMpvRuntime.Configure();
+        if (!nativeStatus.IsAvailable)
         {
-            Fail("libmpv native library failed to load");
+            Fail(nativeStatus.Message);
             return;
         }
 
@@ -42,22 +44,11 @@ public sealed class MpvPlaybackSurface : ContentControl
         Content = view;
     }
 
-    private static bool CanLoadMpvNative()
-    {
-        if (!NativeLibrary.TryLoad("libmpv.2", out var handle))
-        {
-            return false;
-        }
-
-        NativeLibrary.Free(handle);
-        return true;
-    }
-
     private void Fail(string message)
     {
         Content = new TextBlock
         {
-            Text = "libmpv native library was not found. Copy a compatible libmpv build next to the app output and restart.",
+            Text = message,
             Foreground = Brushes.White,
             TextWrapping = TextWrapping.Wrap,
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -68,6 +59,107 @@ public sealed class MpvPlaybackSurface : ContentControl
         Failed?.Invoke(this, new PlaybackSurfaceFailedEventArgs(message));
     }
 }
+
+public static class NativeMpvRuntime
+{
+    public static NativeMpvRuntimeStatus Configure()
+    {
+        var candidate = FindNativeRoot();
+        if (candidate is null)
+        {
+            return new NativeMpvRuntimeStatus(false, MissingNativeMessage());
+        }
+
+        MpvApi.RootPath = candidate;
+        return new NativeMpvRuntimeStatus(true, $"Using native libmpv from {candidate}");
+    }
+
+    private static string? FindNativeRoot()
+    {
+        var fileName = NativeFileName();
+        foreach (var directory in CandidateDirectories())
+        {
+            if (File.Exists(Path.Combine(directory, fileName)))
+            {
+                return directory;
+            }
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            foreach (var directory in new[] { "/usr/lib", "/usr/lib64", "/lib", "/lib64" })
+            {
+                if (File.Exists(Path.Combine(directory, fileName)))
+                {
+                    return directory;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> CandidateDirectories()
+    {
+        var baseDirectory = AppContext.BaseDirectory;
+        yield return baseDirectory;
+        yield return Path.Combine(baseDirectory, "runtimes", RuntimeIdentifier(), "native");
+
+        var current = new DirectoryInfo(baseDirectory);
+        while (current is not null)
+        {
+            yield return Path.Combine(current.FullName, "runtimes", RuntimeIdentifier(), "native");
+            current = current.Parent;
+        }
+    }
+
+    private static string NativeFileName()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return "libmpv-2.dll";
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return "libmpv.so.2";
+        }
+
+        return "libmpv";
+    }
+
+    private static string RuntimeIdentifier()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return "win-x64";
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return "linux-x64";
+        }
+
+        return "native";
+    }
+
+    private static string MissingNativeMessage()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return "Native libmpv was not found. For the Phase 1 spike, place libmpv-2.dll in runtimes/win-x64/native or next to the app output.";
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return "Native libmpv was not found. Install system libmpv, for example through the distribution package manager.";
+        }
+
+        return "Native libmpv was not found for this platform.";
+    }
+}
+
+public readonly record struct NativeMpvRuntimeStatus(bool IsAvailable, string Message);
 
 public sealed class PlaybackSurfaceReadyEventArgs : EventArgs
 {

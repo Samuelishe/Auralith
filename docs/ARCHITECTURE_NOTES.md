@@ -83,6 +83,33 @@ Phase 1 implementation pressure:
 - The current spike allows `Auralith.App` to host `Auralith.Playback.Mpv.MpvPlaybackSurface`.
 - `Auralith.App` must not reference `MpvView`, `MpvContext`, or Hanuman APIs directly.
 - This keeps concrete binding code inside `Auralith.Playback.Mpv` while avoiding speculative factories or DI layers.
+- Native libmpv probing and `MpvApi.RootPath` configuration belong inside `Auralith.Playback.Mpv`, not in the app shell.
+
+## File Input Boundary
+
+The current spike supports only a narrow media-open path:
+
+```text
+App/MainWindow receives a candidate file path
+-> Auralith.Core validates it as a MediaOpenRequest
+-> MainWindow passes the validated path to the active PlaybackSession
+-> Playback layer opens media
+```
+
+This boundary is intentionally small. It does not introduce a media library, import system, playlist parser, recent files model, folder scanner, or metadata pipeline.
+
+Supported/current input directions:
+
+- File picker / Open command.
+- Command-line file path, used later by OS `Open with` integration.
+- Single-file drag/drop.
+
+Future packaging concern:
+
+- Windows file association registration.
+- Linux `.desktop` MIME registration.
+
+`Open with Auralith` should remain split into app capability and OS integration. The app can accept a file path; installers/packages may later register file associations.
 
 ## Architecture Principle
 

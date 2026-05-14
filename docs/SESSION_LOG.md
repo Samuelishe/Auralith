@@ -228,3 +228,39 @@ Notes:
 Next:
 
 - Keep tests focused on non-native logic until implementation pressure justifies broader coverage.
+
+## 2026-05-14 - Native libmpv Loading Strategy And File Input
+
+Context:
+
+- Phase 1 remained constrained to playback spike work.
+- The immediate blocker was native libmpv runtime/loading on Windows.
+- The project also needed a clear app-level model for future file opening scenarios.
+
+Changed:
+
+- Identified the selected Hanuman binding's native names: `libmpv-2.dll` on Windows and `libmpv.so.2` on Linux.
+- Added development-time native probing in `Auralith.Playback.Mpv` and configured `MpvApi.RootPath` when a native runtime is found.
+- Kept missing native libmpv as a controlled failure instead of an app crash.
+- Added `MediaOpenRequest` in `Auralith.Core` for basic local file path validation.
+- Added command-line media path support for the app capability side of future `Open with`.
+- Added minimal single-file drag/drop support.
+- Kept file picker opening on the same validated media-open path.
+- Added unit tests for media-open request validation and command-line path selection.
+
+Validated:
+
+- `dotnet restore Auralith.sln` succeeds.
+- `dotnet build Auralith.sln --no-restore` succeeds with 0 warnings and 0 errors.
+- `dotnet test Auralith.sln` succeeds.
+
+Failed / Blocked:
+
+- No compatible local `libmpv-2.dll` runtime was found, so actual embedded playback is still unvalidated.
+- Overlay z-order over live video, real seek/volume behavior, fullscreen with active video, and live input behavior remain manual validation tasks.
+
+Next:
+
+- Provide compatible Windows `libmpv-2.dll` and companion DLLs next to app output or under `runtimes/win-x64/native`.
+- Re-run the playback spike with a local media file outside the repository.
+- Keep OS file association registration as future packaging work.

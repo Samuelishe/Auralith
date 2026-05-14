@@ -54,15 +54,71 @@ Validated:
 - `HanumanInstitute.LibMpv` / `HanumanInstitute.LibMpv.Avalonia` package integration compiles.
 - Concrete Hanuman/libmpv usage is isolated in `Auralith.Playback.Mpv`.
 - The Avalonia app can start in a controlled failure mode when native libmpv is missing.
+- The selected binding's native loading expectation has been identified:
+  - Windows: `libmpv-2.dll`.
+  - Linux: `libmpv.so.2`.
+- `Auralith.Playback.Mpv` now probes a small set of development-time native locations and sets `MpvApi.RootPath` when a matching native library is found.
+- File opening requests can be initiated through the file picker, command-line media path, or a single-file drag/drop.
 
 Failed / blocked:
 
-- Runtime native loading fails without a compatible `libmpv.2` available to the app.
+- Runtime native loading fails without a compatible `libmpv-2.dll` available to the app on Windows.
 - Embedded playback, overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, and live video interactions remain unvalidated until native libmpv is supplied.
 
 Assumption change:
 
 - Native dependency loading is not a later packaging concern only. It is an immediate blocker for playback validation on Windows.
+
+## Native libmpv Loading Strategy
+
+This is a Phase 1 development-time strategy, not a full packaging system.
+
+The current Hanuman binding resolves libmpv through `MpvApi.RootPath`. `Auralith.Playback.Mpv` configures that root path before creating the embedded `MpvView`.
+
+Windows development strategy:
+
+- Provide `libmpv-2.dll` and its required native companion DLLs locally.
+- Preferred repository-local path for the spike: `runtimes/win-x64/native`.
+- Also supported: place the native files next to the app output.
+- Do not commit native DLLs unless a future packaging/licensing decision explicitly approves that.
+- If the native library is missing, the app should show a controlled failure message instead of crashing.
+
+Linux / Arch development strategy:
+
+- Initial direction is system libmpv through the package manager.
+- The current expected native library name is `libmpv.so.2`.
+- Full AppImage, Flatpak, or bundled-native packaging remains future work.
+
+Manual playback validation needs:
+
+- A local video file outside the repository.
+- A compatible native libmpv runtime available through the strategy above.
+- No large media assets should be added to git.
+
+## File Input Model
+
+Current app capability:
+
+- File picker / `Open` command can request one local file.
+- Command-line argument can request one local file:
+
+```powershell
+dotnet run --project src/Auralith.App/Auralith.App.csproj -- C:\path\to\file.mp4
+```
+
+- Single-file drag/drop onto the video surface can request one local file.
+
+Current constraints:
+
+- Folder opening is rejected in this spike.
+- Missing or invalid paths produce controlled validation errors.
+- Multiple dropped files are ignored with a controlled message.
+- No playlist, queue, media library, recent files, metadata import, or folder scanning behavior is implied.
+
+Future `Open with` support:
+
+- App capability depends on command-line path handling, which now exists.
+- OS integration is separate: Windows file associations and Linux `.desktop` MIME associations belong to future packaging/installer work.
 
 ## Thin Playback Abstraction
 

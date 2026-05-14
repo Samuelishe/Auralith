@@ -21,7 +21,7 @@
 - [ ] Define initial UI token taxonomy.
 - [ ] Define playback spike questions.
 - [ ] Finalize playback spike acceptance criteria.
-- [ ] Define native libmpv loading strategy.
+- [x] Define Phase 1 dev-time native libmpv loading strategy.
 - [ ] Define Windows packaging expectations.
 - [ ] Define Arch Linux system dependency expectations.
 - [ ] Define shell ownership boundaries.
@@ -46,12 +46,19 @@
 - [x] Add minimal xUnit v3 + Shouldly test foundation.
 - [x] Verify `dotnet test Auralith.sln`.
 - [x] Confirm controlled startup when native libmpv is missing.
-- [ ] Provide compatible Windows native `libmpv.2` beside app output for local spike validation.
+- [x] Add command-line file path handling for future `Open with` app capability.
+- [x] Add minimal single-file drag/drop handling for the current spike.
+- [x] Keep file picker/open command working through the same validated media-open request path.
+- [ ] Provide compatible Windows native `libmpv-2.dll` and companion DLLs beside app output or under `runtimes/win-x64/native` for local spike validation.
 - [ ] Validate embedded video rendering.
 - [ ] Validate overlay z-order above video.
 - [ ] Validate play/pause, seek, volume, duration/position updates.
 - [ ] Validate fullscreen and resize behavior.
 - [ ] Validate single-click, double-click, and right-click behavior with live video.
+- [ ] Validate command-line file opening with real native libmpv playback.
+- [ ] Validate drag/drop file opening with real native libmpv playback.
+- [ ] Define future OS file association packaging plan for Windows `Open with`.
+- [ ] Define future Linux `.desktop` MIME association packaging plan.
 
 ## Future
 

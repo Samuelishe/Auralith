@@ -23,6 +23,8 @@ Validated so far:
 - `dotnet test Auralith.sln` succeeds.
 - The app starts in a controlled failure mode when native libmpv is missing.
 - Concrete Hanuman/libmpv usage is isolated in `Auralith.Playback.Mpv`.
+- Windows dev-time native libmpv probing is defined for the spike.
+- Local media can be requested through the file picker, a command-line path, or a single-file drag/drop.
 
 Not yet validated:
 
@@ -34,7 +36,7 @@ Not yet validated:
 
 Current blocker:
 
-- On Windows, the spike needs a compatible native `libmpv.2` available in the app output/runtime path. Until that is supplied, embedded playback cannot be validated.
+- On Windows, the selected Hanuman binding expects a compatible native `libmpv-2.dll`. Until that DLL and its native dependencies are supplied, embedded playback cannot be validated.
 
 ## Philosophy
 
@@ -178,6 +180,24 @@ Important: the app is not a usable media player yet. At the current stage it is 
 
 If native libmpv is missing, the app should start and show a controlled failure message instead of crashing.
 
+Open a local file for the current spike:
+
+```powershell
+dotnet run --project src/Auralith.App/Auralith.App.csproj -- C:\path\to\video.mp4
+```
+
+Also available in the current spike:
+
+- File picker through the `Open` button.
+- Single local file drag/drop onto the video surface.
+
+Future `Open with Auralith` support has two parts:
+
+- App capability: accepting a media path through command-line arguments. This exists in the current spike.
+- OS integration: Windows file associations and Linux `.desktop` MIME registration. This is a future packaging/installer concern and is not implemented.
+
+Do not add large media samples to this repository. Use a local video/audio file for manual playback validation.
+
 ## Native Dependencies
 
 ### Windows
@@ -188,10 +208,12 @@ Current direction:
 - Users should not need to manually install mpv.
 - Windows 11 is the highest polish target.
 
-Current development-stage blocker:
+Current development-stage strategy:
 
-- The playback spike needs a compatible `libmpv.2` native library available to the app output/runtime path.
-- Packaging/loading strategy is not finalized.
+- The Hanuman binding expects `libmpv-2.dll` on Windows.
+- For the Phase 1 spike, place `libmpv-2.dll` and its required native companion DLLs either next to the app output or under `runtimes/win-x64/native`.
+- `Auralith.Playback.Mpv` probes those locations and sets `MpvApi.RootPath` to the matching native directory.
+- Full installer/release packaging is not implemented yet.
 
 ### Linux / Arch Linux
 
@@ -200,6 +222,7 @@ Current direction:
 - Early development may rely on system libmpv installed through the package manager.
 - Arch Linux is treated as a first-class Linux target.
 - Future AppImage/Flatpak or bundled approaches may be investigated later.
+- The expected Linux native library name for the current binding path is `libmpv.so.2`.
 
 Preliminary Arch-style dependency expectation:
 

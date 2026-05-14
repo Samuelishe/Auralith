@@ -29,7 +29,10 @@
           Background="#050608"
           PointerMoved="VideoSurface_PointerMoved"
           PointerPressed="VideoSurface_PointerPressed"
-          DoubleTapped="VideoSurface_DoubleTapped">
+          DoubleTapped="VideoSurface_DoubleTapped"
+          DragDrop.AllowDrop="True"
+          DragDrop.DragOver="VideoSurface_DragOver"
+          DragDrop.Drop="VideoSurface_Drop">
       <mpv:MpvPlaybackSurface x:Name="PlaybackSurface"
                               Ready="PlaybackSurface_Ready"
                               Failed="PlaybackSurface_Failed" />

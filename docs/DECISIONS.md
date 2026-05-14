@@ -608,3 +608,40 @@ Consequences:
 - Unit tests should cover non-native logic and basic assembly/project integrity.
 - Do not add UI automation, screenshot testing, native libmpv integration tests, coverage gates, benchmarks, excessive mocking, or test-only infrastructure at this stage.
 - Native playback behavior remains manual/spike validation until libmpv loading and embedded rendering assumptions are validated.
+
+## 2026-05-14 - Phase 1 Dev-Time Native libmpv Loading
+
+Status: Accepted
+
+Context:
+
+The selected Hanuman binding needs a native libmpv runtime before embedded playback can be validated. On Windows, the binding expects `libmpv-2.dll`.
+
+Decision:
+
+For the Phase 1 spike, `Auralith.Playback.Mpv` probes for native libmpv in a small set of development-time locations and configures `MpvApi.RootPath` when found. Windows should use local `libmpv-2.dll` and companion DLLs next to the app output or under `runtimes/win-x64/native`. Linux/Arch may initially rely on system `libmpv.so.2`.
+
+Consequences:
+
+- This is not a full packaging or installer system.
+- Native probing remains isolated in `Auralith.Playback.Mpv`.
+- Missing native libmpv should produce controlled failure, not an app crash.
+- Windows future distribution should still prefer bundled native libmpv so users do not manually install mpv.
+
+## 2026-05-14 - File Input Model For Playback Spike
+
+Status: Accepted
+
+Context:
+
+Auralith needs to open local media through several user paths without introducing playlists, media library behavior, or OS installer work during the spike.
+
+Decision:
+
+Support app-level single-file open requests through the file picker, command-line media path, and single-file drag/drop. Treat OS `Open with Auralith` as two concerns: app capability through command-line arguments now, and OS file association registration later as packaging work.
+
+Consequences:
+
+- `Auralith.Core` owns basic path validation through a small media-open request model.
+- The current spike rejects folders, missing paths, invalid paths, and multiple dropped files gracefully.
+- No playlist, queue persistence, recent files, metadata extraction, folder scanning, registry changes, or Linux desktop MIME registration is introduced.

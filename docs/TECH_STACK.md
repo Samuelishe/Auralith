@@ -16,6 +16,15 @@ This document records the intended stack. It does not imply dependencies should 
 
 - libmpv
 - FFmpeg through libmpv
+- `HanumanInstitute.LibMpv`
+- `HanumanInstitute.LibMpv.Avalonia`
+
+Current native loading expectations for the Phase 1 spike:
+
+- Windows: `libmpv-2.dll`.
+- Linux: `libmpv.so.2`.
+
+The Hanuman binding is the current spike candidate, not an irreversible dependency commitment.
 
 ## Data And Metadata
 
@@ -35,4 +44,4 @@ This document records the intended stack. It does not imply dependencies should 
 
 ## Current Constraint
 
-Do not add packages, projects, or implementation code during Phase 0.
+Phase 1 is active only as a constrained technical validation phase. Do not add broad architecture, production systems, or new dependency areas outside the approved playback spike.

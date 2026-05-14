@@ -52,7 +52,9 @@ Current validation status:
 - Tests pass on .NET 10.
 - Hanuman/libmpv binding is isolated in `Auralith.Playback.Mpv`.
 - App startup no longer crashes when native `libmpv` is missing.
-- Native `libmpv.2` is missing from the Windows runtime path, so embedded playback is not yet validated.
+- Windows dev-time native probing is defined for `libmpv-2.dll`.
+- File picker, command-line file argument, and single-file drag/drop are supported as current app-level media-open inputs.
+- Native `libmpv-2.dll` is missing from the Windows runtime path, so embedded playback is not yet validated.
 
 Planned structure to review before creation:
 
@@ -115,9 +117,15 @@ Possible goals:
 
 Current blocker:
 
-- `HanumanInstitute.LibMpv.Avalonia` attempts to load native `libmpv.2`.
-- No compatible native libmpv build is currently present next to the app output.
-- Windows bundled-native strategy must be decided before playback can be validated.
+- `HanumanInstitute.LibMpv.Avalonia` expects native `libmpv-2.dll` on Windows.
+- No compatible native libmpv build is currently present next to the app output or under `runtimes/win-x64/native`.
+- Windows bundled-native strategy must be validated before playback can be validated.
+
+Current file input status:
+
+- File picker and command-line media path support exist for the current spike.
+- Single-file drag/drop exists for the current spike.
+- OS-level `Open with Auralith` registration is future packaging work and is not part of this phase.
 
 Testing boundary:
 

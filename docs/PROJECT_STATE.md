@@ -15,14 +15,17 @@ Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Ava
 - Solution exists: `Auralith.sln`.
 - Documentation folder exists: `docs`.
 - Minimal `src/` skeleton exists: `Auralith.App`, `Auralith.Core`, `Auralith.Playback`, `Auralith.Playback.Mpv`.
-- No `tests/` projects have been created yet.
+- Minimal test projects exist: `Auralith.Core.Tests` and `Auralith.Playback.Tests`.
 - Minimal Avalonia application foundation exists.
 - Minimal Hanuman/libmpv playback spike code exists.
 - Minimal xUnit v3 + Shouldly test foundation exists for Core and Playback.
 - Build succeeds on .NET 10.
 - Tests pass on .NET 10.
-- Runtime startup succeeds in controlled failure mode when native `libmpv` is missing.
-- Actual embedded playback is not yet validated because native `libmpv.2` is not available in the app output/runtime path.
+- Runtime startup is designed to remain in controlled failure mode when native `libmpv` is missing.
+- Windows dev-time native probing now looks for `libmpv-2.dll` next to the app output or under `runtimes/win-x64/native`.
+- Actual embedded playback is not yet validated because native `libmpv-2.dll` and its companion DLLs are not available in the local runtime path.
+- File input app capability now exists for file picker, command-line media path, and single local file drag/drop.
+- OS-level `Open with Auralith` registration is not implemented and remains a future packaging concern.
 
 ## Current Scope
 
@@ -38,6 +41,7 @@ In scope:
 - Minimal Phase 1 technical validation.
 - Native libmpv loading investigation.
 - Lightweight unit testing for non-native Core/Playback logic.
+- Minimal file input coordination for the current playback spike.
 
 Out of scope:
 
@@ -52,6 +56,8 @@ Out of scope:
 - Service layer.
 - Control library.
 - UI/native playback automated testing.
+- OS file association registration.
+- Media library, playlist import, recent files, folder scanning, and metadata extraction.
 
 ## Continuity Goals
 
