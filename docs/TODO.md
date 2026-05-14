@@ -23,6 +23,7 @@
 - [ ] Define playback spike questions.
 - [ ] Finalize playback spike acceptance criteria.
 - [x] Define Phase 1 dev-time native libmpv loading strategy.
+- [x] Add dev-only Windows libmpv setup helper.
 - [ ] Define Windows packaging expectations.
 - [ ] Review licensing and distribution requirements before committing bundled native libmpv binaries.
 - [ ] Define Arch Linux system dependency expectations.
@@ -51,9 +52,10 @@
 - [x] Add command-line file path handling for future `Open with` app capability.
 - [x] Add minimal single-file drag/drop handling for the current spike.
 - [x] Keep file picker/open command working through the same validated media-open request path.
-- [ ] Provide compatible Windows native `libmpv-2.dll` and companion DLLs beside app output or under `runtimes/win-x64/native` for local spike validation.
+- [x] Provide compatible Windows native `libmpv-2.dll` locally under `runtimes/win-x64/native` for spike validation.
 - [ ] Validate that the improved missing-runtime message is clear during a manual app launch.
-- [ ] Validate embedded video rendering.
+- [x] Add Windows application manifest required by Avalonia NativeControlHost.
+- [ ] Validate embedded video rendering visually.
 - [ ] Validate overlay z-order above video.
 - [ ] Validate play/pause, seek, volume, duration/position updates.
 - [ ] Validate fullscreen and resize behavior.

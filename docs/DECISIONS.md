@@ -681,3 +681,40 @@ Consequences:
 - No installer, registry integration, automatic downloader, or release packaging is added in the current spike.
 - Native binaries are not committed until licensing, distribution, and packaging ownership are reviewed.
 - Missing native runtime remains a controlled failure with clear instructions.
+
+## 2026-05-14 - Dev-Only Windows libmpv Setup Helper
+
+Status: Accepted
+
+Context:
+
+Phase 1 needs repeatable local native runtime setup for playback validation, but the application must not download runtime dependencies at execution time.
+
+Decision:
+
+Add `tools/setup-libmpv-windows.ps1` as a developer-only helper. It uses trusted Windows mpv/libmpv build sources listed by the official mpv installation page, defaults to shinchiro GitHub releases, downloads a libmpv development archive, extracts `libmpv-2.dll`, and copies native DLLs into `runtimes/win-x64/native`.
+
+Consequences:
+
+- This improves local developer experience for the playback spike.
+- It is not production packaging, an installer, release automation, or runtime app downloader.
+- Downloaded archives and copied native DLLs remain ignored and must not be committed.
+- Future release packaging still needs explicit licensing and distribution review.
+
+## 2026-05-14 - Windows Application Manifest For NativeControlHost
+
+Status: Accepted
+
+Context:
+
+After native libmpv was supplied, Avalonia `NativeControlHost` failed on Windows with an error indicating that an application manifest with supported OS list might be required.
+
+Decision:
+
+Add a minimal Windows application manifest to `Auralith.App` declaring modern Windows support.
+
+Consequences:
+
+- This is a runtime compatibility requirement discovered by the playback spike.
+- It is not broad packaging work.
+- After adding the manifest, the app stayed alive during a short command-line launch with a local video file.

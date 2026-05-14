@@ -293,3 +293,35 @@ Next:
 
 - Validate the improved missing-runtime message through a manual app launch.
 - Review licensing and packaging requirements before any native binaries are added to repository or release artifacts.
+
+## 2026-05-14 - Dev-Time libmpv Setup And Local Launch Validation
+
+Context:
+
+- Phase 1 continued strictly inside native runtime validation and playback spike work.
+- Ordinary Windows users should eventually receive a bundled runtime, but local development needed one-command native setup.
+
+Changed:
+
+- Added `tools/setup-libmpv-windows.ps1`.
+- Added `runtimes/win-x64/native/README.md` and `.gitkeep`.
+- Updated `.gitignore` so local native DLLs, PDBs, archives, and `.auralith/` download/extract files are not committed.
+- Added a minimal Windows application manifest to `Auralith.App` after Avalonia `NativeControlHost` required a supported OS declaration.
+
+Validated:
+
+- The dev helper downloaded shinchiro `mpv-dev-x86_64-20260421-git-5921fe5.7z`.
+- The helper found `libmpv-2.dll` and copied it to `runtimes/win-x64/native`.
+- Initial launch with local video failed before the manifest with a Windows `NativeControlHost` child-window error.
+- After adding the manifest, Auralith launched with a local video path from `E:\Downloads\Films` and stayed alive for 15 seconds before being stopped manually.
+
+Failed / Blocked:
+
+- Visual embedded playback rendering was not confirmed by Codex.
+- Overlay z-order, seek, volume, fullscreen, resize behavior, and drag/drop with real playback still require manual visual validation.
+
+Next:
+
+- Manually run the app with the same local video and confirm rendering and controls.
+- Keep native DLLs and downloaded archives out of git.
+- Continue treating release packaging as future work, not part of the current spike.

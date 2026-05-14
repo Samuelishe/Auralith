@@ -8,6 +8,7 @@
 *.csproj text eol=lf
 *.props text eol=lf
 *.targets text eol=lf
+*.manifest text eol=lf
 *.sln text eol=crlf
 
 # Documentation and config.
@@ -18,6 +19,7 @@
 *.yaml text eol=lf
 *.gitignore text eol=lf
 *.gitattributes text eol=lf
+.gitkeep text eol=lf
 
 # Scripts.
 *.ps1 text eol=lf

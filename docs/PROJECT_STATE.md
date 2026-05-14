@@ -24,7 +24,10 @@ Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Ava
 - Tests pass on .NET 10.
 - Runtime startup is designed to remain in controlled failure mode when native `libmpv` is missing.
 - Windows dev-time native probing now looks for `libmpv-2.dll` next to the app output or under `runtimes/win-x64/native`.
-- Actual embedded playback is not yet validated because native `libmpv-2.dll` and its companion DLLs are not available in the local runtime path.
+- A dev-only Windows setup helper exists: `tools/setup-libmpv-windows.ps1`.
+- The helper downloaded a shinchiro mpv/libmpv development archive and copied `libmpv-2.dll` into `runtimes/win-x64/native` locally.
+- The app launched with a local video path from `E:\Downloads\Films` and stayed alive for a short validation run after a Windows application manifest was added.
+- Actual embedded video rendering and controls still need visual/manual validation.
 - Future Windows releases should aim to bundle native libmpv so normal users can launch Auralith without manually installing mpv/libmpv.
 - Native DLLs are not committed during the current spike because licensing, distribution shape, and packaging ownership still need explicit decisions.
 - File input app capability now exists for file picker, command-line media path, and single local file drag/drop.
@@ -43,6 +46,7 @@ In scope:
 - Unified media shell concept planning.
 - Minimal Phase 1 technical validation.
 - Native libmpv loading investigation.
+- Dev-time native libmpv setup tooling.
 - Lightweight unit testing for non-native Core/Playback logic.
 - Minimal file input coordination for the current playback spike.
 - Line endings policy and runtime/developer experience clarification.
@@ -62,6 +66,7 @@ Out of scope:
 - UI/native playback automated testing.
 - OS file association registration.
 - Installer/release packaging and native binary distribution.
+- Runtime internet downloads from the application.
 - Media library, playlist import, recent files, folder scanning, and metadata extraction.
 
 ## Continuity Goals

@@ -54,9 +54,12 @@ Current validation status:
 - Hanuman/libmpv binding is isolated in `Auralith.Playback.Mpv`.
 - App startup no longer crashes when native `libmpv` is missing.
 - Windows dev-time native probing is defined for `libmpv-2.dll`.
+- Windows dev-time setup helper exists for trusted mpv/libmpv builds.
 - Windows release direction remains bundled native runtime so normal users should not manually install mpv/libmpv.
 - File picker, command-line file argument, and single-file drag/drop are supported as current app-level media-open inputs.
-- Native `libmpv-2.dll` is missing from the Windows runtime path, so embedded playback is not yet validated.
+- Local `libmpv-2.dll` was prepared through the dev helper.
+- The app stayed alive during a short command-line launch with a local video file.
+- Embedded rendering and controls still require visual/manual validation.
 
 Planned structure to review before creation:
 
@@ -120,8 +123,8 @@ Possible goals:
 Current blocker:
 
 - `HanumanInstitute.LibMpv.Avalonia` expects native `libmpv-2.dll` on Windows.
-- No compatible native libmpv build is currently present next to the app output or under `runtimes/win-x64/native`.
-- Windows bundled-native strategy must be validated before playback can be validated.
+- Dev-time native setup is available, but final Windows release packaging remains unimplemented.
+- Embedded video render, overlay z-order, seek, volume, fullscreen, and resize behavior still need manual validation with the prepared runtime.
 - Native DLLs are not committed yet; distribution and licensing must be reviewed before bundled binaries are added.
 
 Current file input status:

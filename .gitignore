@@ -47,6 +47,12 @@ logs/
 *.log
 *.tmp
 *.temp
+.auralith/
+runtimes/win-x64/native/*.dll
+runtimes/win-x64/native/*.pdb
+runtimes/win-x64/native/*.exe
+runtimes/win-x64/native/*.7z
+runtimes/win-x64/native/*.zip
 
 # OS files
 .DS_Store

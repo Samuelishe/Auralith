@@ -25,7 +25,9 @@ Validated so far:
 - The app starts in a controlled failure mode when native libmpv is missing.
 - Concrete Hanuman/libmpv usage is isolated in `Auralith.Playback.Mpv`.
 - Windows dev-time native libmpv probing is defined for the spike.
+- Windows dev-time libmpv setup helper exists.
 - Local media can be requested through the file picker, a command-line path, or a single-file drag/drop.
+- With shinchiro `mpv-dev-x86_64-20260421-git-5921fe5.7z`, `libmpv-2.dll` was found and the app stayed alive for a short command-line launch with a local video.
 
 Not yet validated:
 
@@ -37,7 +39,7 @@ Not yet validated:
 
 Current blocker:
 
-- On Windows, the selected Hanuman binding expects a compatible native `libmpv-2.dll`. Until that DLL and its native dependencies are supplied, embedded playback cannot be validated.
+- Native runtime can now be prepared for development, but embedded video rendering, overlay z-order, seek, volume, fullscreen, and resize still need visual/manual validation.
 
 ## Philosophy
 
@@ -199,6 +201,32 @@ Future `Open with Auralith` support has two parts:
 
 Do not add large media samples to this repository. Use a local video/audio file for manual playback validation.
 
+## Windows libmpv Dev Setup
+
+For local Phase 1 development on Windows, run:
+
+```powershell
+.\tools\setup-libmpv-windows.ps1
+```
+
+What the helper does:
+
+- Uses a trusted source listed by the official mpv installation page.
+- Defaults to `shinchiro/mpv-winbuild-cmake` GitHub releases.
+- Selects an x86_64 libmpv development archive.
+- Downloads it into the ignored `.auralith/` work directory.
+- Extracts it with 7-Zip if available, otherwise with system `tar` when possible.
+- Finds `libmpv-2.dll`.
+- Copies `libmpv-2.dll` and DLLs beside it into `runtimes/win-x64/native`.
+
+Alternative trusted source:
+
+```powershell
+.\tools\setup-libmpv-windows.ps1 -Source zhongfly
+```
+
+This is development tooling only. It is not an installer, release pipeline, runtime downloader, or final packaging strategy.
+
 ## Line Endings
 
 The repository uses `.gitattributes` to keep text files normalized and reduce Windows CRLF/LF warning noise.
@@ -226,6 +254,7 @@ Current direction:
 Current development-stage strategy:
 
 - The Hanuman binding expects `libmpv-2.dll` on Windows.
+- Developers can run `.\tools\setup-libmpv-windows.ps1` to populate `runtimes/win-x64/native`.
 - Use a compatible Windows libmpv/mpv build that provides `libmpv-2.dll`.
 - For the Phase 1 spike, place `libmpv-2.dll` and its required native companion DLLs either next to the app output or under `runtimes/win-x64/native`.
 - `Auralith.Playback.Mpv` probes those locations and sets `MpvApi.RootPath` to the matching native directory.
@@ -266,6 +295,8 @@ README.md
 Auralith.sln
 Directory.Packages.props
 docs/
+runtimes/
+  win-x64/native/
 src/
   Auralith.App/
   Auralith.Core/
@@ -274,6 +305,8 @@ src/
 tests/
   Auralith.Core.Tests/
   Auralith.Playback.Tests/
+tools/
+  setup-libmpv-windows.ps1
 ```
 
 Not currently present:

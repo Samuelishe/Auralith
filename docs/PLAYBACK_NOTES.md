@@ -59,11 +59,13 @@ Validated:
   - Linux: `libmpv.so.2`.
 - `Auralith.Playback.Mpv` now probes a small set of development-time native locations and sets `MpvApi.RootPath` when a matching native library is found.
 - File opening requests can be initiated through the file picker, command-line media path, or a single-file drag/drop.
+- `tools/setup-libmpv-windows.ps1` can populate `runtimes/win-x64/native` from a trusted Windows mpv/libmpv build source.
+- A local run with a video from `E:\Downloads\Films` stayed alive after adding a Windows application manifest.
 
 Failed / blocked:
 
-- Runtime native loading fails without a compatible `libmpv-2.dll` available to the app on Windows.
-- Embedded playback, overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, and live video interactions remain unvalidated until native libmpv is supplied.
+- Before adding the manifest, Avalonia `NativeControlHost` failed on Windows with: "Unable to create child window for native control host. Application manifest with supported OS list might be required."
+- Embedded video rendering, overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, and live video interactions still require visual/manual validation.
 
 Assumption change:
 
@@ -78,12 +80,32 @@ The current Hanuman binding resolves libmpv through `MpvApi.RootPath`. `Auralith
 Windows development strategy:
 
 - Provide `libmpv-2.dll` and its required native companion DLLs locally.
+- Preferred setup command:
+
+```powershell
+.\tools\setup-libmpv-windows.ps1
+```
+
 - Use a compatible Windows libmpv/mpv build that provides `libmpv-2.dll`; no single Windows DLL source has been locked as the project standard yet.
 - Preferred repository-local path for the spike: `runtimes/win-x64/native`.
 - Also supported: place the native files next to the app output.
 - Do not commit native DLLs unless a future packaging/licensing decision explicitly approves that.
 - If the native library is missing, the app should show a controlled failure message instead of crashing.
 - Future Windows releases should bundle `libmpv-2.dll` and companion DLLs so normal users can launch Auralith without manually installing mpv/libmpv.
+
+Trusted source policy:
+
+- Use Windows builds listed by the official mpv installation page.
+- Current dev helper defaults to shinchiro GitHub releases.
+- zhongfly GitHub releases are supported by `-Source zhongfly`.
+- Do not use random DLL download sites, "missing DLL" sites, Softonic-like mirrors, or opaque file hosts.
+
+Local validation result:
+
+- Source used: shinchiro `mpv-dev-x86_64-20260421-git-5921fe5.7z`.
+- `libmpv-2.dll` was copied to `runtimes/win-x64/native`.
+- A command-line launch with `E:\Downloads\Films\Неуместный человек (Den brysomme mannen; The Bothersome Man) [2006] 1080p BDRemux-ARTiCUN0.mkv` stayed alive for 15 seconds and was stopped manually.
+- Visual playback, overlay, seek, volume, fullscreen, resize, and drag/drop still need human confirmation.
 
 Current Windows missing-runtime message should explain:
 

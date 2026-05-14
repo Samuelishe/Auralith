@@ -30,6 +30,7 @@ Windows release direction:
 
 - Future release packages should bundle `libmpv-2.dll` and companion DLLs.
 - Current Phase 1 development requires a compatible local Windows libmpv/mpv runtime.
+- `tools/setup-libmpv-windows.ps1` can prepare the local runtime from trusted mpv Windows build sources.
 - Native binaries are not committed until licensing and packaging decisions are explicit.
 
 ## Data And Metadata
