@@ -264,3 +264,32 @@ Next:
 - Provide compatible Windows `libmpv-2.dll` and companion DLLs next to app output or under `runtimes/win-x64/native`.
 - Re-run the playback spike with a local media file outside the repository.
 - Keep OS file association registration as future packaging work.
+
+## 2026-05-14 - Line Endings And Runtime Developer Experience
+
+Context:
+
+- Windows Git line-ending warnings were creating avoidable noise.
+- The native libmpv runtime blocker needed clearer developer-facing documentation and failure messaging.
+
+Changed:
+
+- Added root `.gitattributes` to define predictable line endings.
+- Kept most text files normalized to LF and `.sln` files as CRLF for Visual Studio/Rider compatibility.
+- Marked binary assets, native libraries, executables, and media files as binary.
+- Improved the missing native libmpv message for Windows and Linux.
+- Clarified that Windows Phase 1 development requires a compatible `libmpv-2.dll` runtime placed locally, while future Windows releases should bundle native libmpv.
+- Documented why native DLLs are not committed yet.
+
+Validated:
+
+- Build and test verification should be run after this documentation/runtime clarity update.
+
+Failed / Blocked:
+
+- Embedded playback remains blocked until a compatible Windows `libmpv-2.dll` and companion DLLs are supplied.
+
+Next:
+
+- Validate the improved missing-runtime message through a manual app launch.
+- Review licensing and packaging requirements before any native binaries are added to repository or release artifacts.

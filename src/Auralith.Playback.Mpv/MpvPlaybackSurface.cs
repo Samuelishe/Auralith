@@ -147,12 +147,12 @@ public static class NativeMpvRuntime
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return "Native libmpv was not found. For the Phase 1 spike, place libmpv-2.dll in runtimes/win-x64/native or next to the app output.";
+            return "Missing native libmpv runtime. Auralith Phase 1 expected libmpv-2.dll in runtimes/win-x64/native or next to the app output. Copy a compatible Windows libmpv/mpv runtime with companion DLLs for dev-time playback validation. Future Windows releases should bundle this runtime.";
         }
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            return "Native libmpv was not found. Install system libmpv, for example through the distribution package manager.";
+            return "Missing native libmpv runtime. Auralith Phase 1 expected libmpv.so.2 from the system library path or runtimes/linux-x64/native. Install system libmpv through the distribution package manager for dev-time playback validation.";
         }
 
         return "Native libmpv was not found for this platform.";

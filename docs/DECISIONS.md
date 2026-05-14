@@ -645,3 +645,39 @@ Consequences:
 - `Auralith.Core` owns basic path validation through a small media-open request model.
 - The current spike rejects folders, missing paths, invalid paths, and multiple dropped files gracefully.
 - No playlist, queue persistence, recent files, metadata extraction, folder scanning, registry changes, or Linux desktop MIME registration is introduced.
+
+## 2026-05-14 - Repository Line Ending Policy
+
+Status: Accepted
+
+Context:
+
+Windows development produced Git warning noise about LF being replaced by CRLF. The project needs stable diffs across Windows and Linux without broad file churn.
+
+Decision:
+
+Add root `.gitattributes` and normalize source, documentation, and configuration text files predictably. Most text files use LF in the repository. `.sln` files use CRLF for Visual Studio/Rider compatibility. Binary and native/runtime file types are marked binary.
+
+Consequences:
+
+- Avoid line-ending-only diffs.
+- Avoid mass-normalizing existing files unless the change is intentional and reviewed.
+- Future native DLLs and large media/runtime files are treated as binary, but should still not be committed without explicit packaging/licensing approval.
+
+## 2026-05-14 - Windows Native Runtime Release Goal
+
+Status: Accepted
+
+Context:
+
+Phase 1 requires developers to provide native libmpv manually, but normal Windows users should not need to understand or install mpv/libmpv runtime dependencies.
+
+Decision:
+
+During Phase 1, developers provide a compatible Windows libmpv/mpv runtime containing `libmpv-2.dll` and companion DLLs under `runtimes/win-x64/native` or next to app output. Future Windows release builds should bundle that native runtime so Auralith works out of the box.
+
+Consequences:
+
+- No installer, registry integration, automatic downloader, or release packaging is added in the current spike.
+- Native binaries are not committed until licensing, distribution, and packaging ownership are reviewed.
+- Missing native runtime remains a controlled failure with clear instructions.

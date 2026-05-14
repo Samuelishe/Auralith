@@ -13,6 +13,7 @@ Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Ava
 ## Repository Status
 
 - Solution exists: `Auralith.sln`.
+- Repository line endings are governed by `.gitattributes`.
 - Documentation folder exists: `docs`.
 - Minimal `src/` skeleton exists: `Auralith.App`, `Auralith.Core`, `Auralith.Playback`, `Auralith.Playback.Mpv`.
 - Minimal test projects exist: `Auralith.Core.Tests` and `Auralith.Playback.Tests`.
@@ -24,6 +25,8 @@ Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Ava
 - Runtime startup is designed to remain in controlled failure mode when native `libmpv` is missing.
 - Windows dev-time native probing now looks for `libmpv-2.dll` next to the app output or under `runtimes/win-x64/native`.
 - Actual embedded playback is not yet validated because native `libmpv-2.dll` and its companion DLLs are not available in the local runtime path.
+- Future Windows releases should aim to bundle native libmpv so normal users can launch Auralith without manually installing mpv/libmpv.
+- Native DLLs are not committed during the current spike because licensing, distribution shape, and packaging ownership still need explicit decisions.
 - File input app capability now exists for file picker, command-line media path, and single local file drag/drop.
 - OS-level `Open with Auralith` registration is not implemented and remains a future packaging concern.
 
@@ -42,6 +45,7 @@ In scope:
 - Native libmpv loading investigation.
 - Lightweight unit testing for non-native Core/Playback logic.
 - Minimal file input coordination for the current playback spike.
+- Line endings policy and runtime/developer experience clarification.
 
 Out of scope:
 
@@ -57,6 +61,7 @@ Out of scope:
 - Control library.
 - UI/native playback automated testing.
 - OS file association registration.
+- Installer/release packaging and native binary distribution.
 - Media library, playlist import, recent files, folder scanning, and metadata extraction.
 
 ## Continuity Goals

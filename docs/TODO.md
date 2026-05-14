@@ -11,6 +11,7 @@
 - [x] Add documentation items to the solution for Rider visibility.
 - [x] Add repository-level README that reflects current Phase 1 state.
 - [x] Configure repository ignore rules for the project foundation.
+- [x] Add repository `.gitattributes` line-ending policy.
 - [x] Add agent rule for final English commit descriptions.
 - [ ] Review documentation with the project owner.
 - [x] Decide when Phase 1 may begin.
@@ -23,6 +24,7 @@
 - [ ] Finalize playback spike acceptance criteria.
 - [x] Define Phase 1 dev-time native libmpv loading strategy.
 - [ ] Define Windows packaging expectations.
+- [ ] Review licensing and distribution requirements before committing bundled native libmpv binaries.
 - [ ] Define Arch Linux system dependency expectations.
 - [ ] Define shell ownership boundaries.
 - [ ] Define MainWindow, MediaShell, PlaybackSession, PlaybackQueue, and VideoPresentation ownership boundaries.
@@ -50,6 +52,7 @@
 - [x] Add minimal single-file drag/drop handling for the current spike.
 - [x] Keep file picker/open command working through the same validated media-open request path.
 - [ ] Provide compatible Windows native `libmpv-2.dll` and companion DLLs beside app output or under `runtimes/win-x64/native` for local spike validation.
+- [ ] Validate that the improved missing-runtime message is clear during a manual app launch.
 - [ ] Validate embedded video rendering.
 - [ ] Validate overlay z-order above video.
 - [ ] Validate play/pause, seek, volume, duration/position updates.

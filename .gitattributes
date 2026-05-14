@@ -1,0 +1,42 @@
+# Normalize text files in the repository to avoid CRLF/LF churn.
+* text=auto
+
+# Source and project files.
+*.cs text eol=lf
+*.axaml text eol=lf
+*.xaml text eol=lf
+*.csproj text eol=lf
+*.props text eol=lf
+*.targets text eol=lf
+*.sln text eol=crlf
+
+# Documentation and config.
+*.md text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Scripts.
+*.ps1 text eol=lf
+*.sh text eol=lf
+
+# Binary assets and native/runtime files.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.exe binary
+*.mp3 binary
+*.flac binary
+*.wav binary
+*.mp4 binary
+*.mkv binary
+*.webm binary

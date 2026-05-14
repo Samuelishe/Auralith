@@ -15,6 +15,7 @@ Auralith currently has:
 - A narrow playback spike boundary using `HanumanInstitute.LibMpv` / `HanumanInstitute.LibMpv.Avalonia`.
 - A minimal `Auralith.Playback` contract and `Auralith.Playback.Mpv` implementation boundary.
 - A lightweight xUnit v3 + Shouldly test foundation for Core and Playback.
+- Repository line ending policy through `.gitattributes`.
 
 Validated so far:
 
@@ -198,6 +199,19 @@ Future `Open with Auralith` support has two parts:
 
 Do not add large media samples to this repository. Use a local video/audio file for manual playback validation.
 
+## Line Endings
+
+The repository uses `.gitattributes` to keep text files normalized and reduce Windows CRLF/LF warning noise.
+
+Policy:
+
+- Most text files are stored as LF in git.
+- `.sln` files use CRLF for Visual Studio/Rider compatibility.
+- C#, AXAML/XAML, project files, Markdown, JSON, XML, YAML, `.gitignore`, and `.gitattributes` have explicit line-ending rules.
+- Binary files and native/runtime files are marked binary.
+
+Do not mass-normalize the repository unless the change is intentional and reviewed. Line-ending-only diffs should be avoided.
+
 ## Native Dependencies
 
 ### Windows
@@ -207,13 +221,23 @@ Current direction:
 - Auralith should eventually bundle native libmpv with the app.
 - Users should not need to manually install mpv.
 - Windows 11 is the highest polish target.
+- Future Windows release builds should work out of the box by shipping `libmpv-2.dll` and its required companion DLLs with Auralith.
 
 Current development-stage strategy:
 
 - The Hanuman binding expects `libmpv-2.dll` on Windows.
+- Use a compatible Windows libmpv/mpv build that provides `libmpv-2.dll`.
 - For the Phase 1 spike, place `libmpv-2.dll` and its required native companion DLLs either next to the app output or under `runtimes/win-x64/native`.
 - `Auralith.Playback.Mpv` probes those locations and sets `MpvApi.RootPath` to the matching native directory.
+- If playback cannot start, first verify that `libmpv-2.dll` and companion DLLs are present in one of those paths.
+- Native DLLs are not committed to this repository yet. Licensing, distribution shape, and packaging ownership must be reviewed before bundling native binaries.
 - Full installer/release packaging is not implemented yet.
+
+Useful upstream references:
+
+- [mpv official site](https://mpv.io/)
+- [mpv repository](https://github.com/mpv-player/mpv)
+- [HanumanInstitute.LibMpv](https://github.com/mysteryx93/LibMpv-OpenGL)
 
 ### Linux / Arch Linux
 

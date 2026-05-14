@@ -78,10 +78,20 @@ The current Hanuman binding resolves libmpv through `MpvApi.RootPath`. `Auralith
 Windows development strategy:
 
 - Provide `libmpv-2.dll` and its required native companion DLLs locally.
+- Use a compatible Windows libmpv/mpv build that provides `libmpv-2.dll`; no single Windows DLL source has been locked as the project standard yet.
 - Preferred repository-local path for the spike: `runtimes/win-x64/native`.
 - Also supported: place the native files next to the app output.
 - Do not commit native DLLs unless a future packaging/licensing decision explicitly approves that.
 - If the native library is missing, the app should show a controlled failure message instead of crashing.
+- Future Windows releases should bundle `libmpv-2.dll` and companion DLLs so normal users can launch Auralith without manually installing mpv/libmpv.
+
+Current Windows missing-runtime message should explain:
+
+- Native libmpv runtime is missing.
+- Expected file name is `libmpv-2.dll`.
+- Auralith looked in `runtimes/win-x64/native` and next to the app output.
+- This is a Phase 1/dev-time blocker.
+- Future Windows releases should bundle the runtime.
 
 Linux / Arch development strategy:
 
@@ -221,6 +231,8 @@ Windows:
 - Bundled native libmpv is preferred.
 - Users should not manually install mpv.
 - Windows 11 receives the highest polish priority.
+- Release packages should include `libmpv-2.dll` and required companion DLLs once licensing and packaging decisions are made.
+- Phase 1 does not include an installer, updater, automatic downloader, or release automation.
 
 Linux / Arch:
 

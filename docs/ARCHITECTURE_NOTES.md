@@ -84,6 +84,7 @@ Phase 1 implementation pressure:
 - `Auralith.App` must not reference `MpvView`, `MpvContext`, or Hanuman APIs directly.
 - This keeps concrete binding code inside `Auralith.Playback.Mpv` while avoiding speculative factories or DI layers.
 - Native libmpv probing and `MpvApi.RootPath` configuration belong inside `Auralith.Playback.Mpv`, not in the app shell.
+- Dev-time native probing is not release packaging. Future bundling should be handled by packaging work, not by spreading native-runtime decisions through UI code.
 
 ## File Input Boundary
 
