@@ -7,7 +7,8 @@ Auralith should be visually quiet, modern, and efficient. The UI should support 
 - Keep the main surfaces calm and scannable.
 - Prefer direct manipulation where it fits media playback.
 - Hide advanced controls until they are contextually relevant.
-- Keep audio and video visually related but structurally distinct.
+- Use one unified media shell with adaptive presentation modes.
+- Reuse shared transport controls, shared playback session state, and a shared timeline foundation.
 - Avoid layout changes between themes.
 - Avoid settings pages that expose every internal option as a user concern.
 
@@ -19,11 +20,25 @@ Auralith should be visually quiet, modern, and efficient. The UI should support 
 - No decorative complexity pretending to be power.
 - No implementation of UI during documentation-only phases.
 
-## Audio And Video Split
+## Unified Media Shell
 
-Audio mode may expose richer information: metadata, playlists, queue, album/track context, and discovery surfaces.
+Auralith should not behave like two separate players. `MainWindow` or the main media shell is the single primary interaction point. Opening video switches the shell into Video Presentation Mode. Opening audio switches it into Audio Presentation Mode.
 
-Video mode should protect the content. Controls are overlays, minimal by default, and should disappear when inactive.
+Playback state, queue/session state, theme state, and base control logic remain shared. Audio and video UI should differ only where content type requires it.
+
+Shared concepts:
+
+- Shared transport controls.
+- Shared playback session.
+- Shared queue model.
+- Shared timeline control with mode-specific styling.
+- Shared visual language.
+
+## Presentation Modes
+
+Audio Presentation Mode may expose richer information: metadata, playlists, queue, album/track context, and discovery surfaces.
+
+Video Presentation Mode should protect the content. Controls are overlays, minimal by default, and should appear on mouse movement/hover and disappear when idle.
 
 ## Timeline Direction
 

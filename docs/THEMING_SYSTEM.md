@@ -10,23 +10,42 @@ Auralith may support style themes such as Minimal, Soft, Sharp, Compact, and Flo
 
 Themes must preserve:
 
-- Window structure.
+- Layout.
+- Control tree.
+- UX structure.
+- Basic interaction model.
 - Navigation model.
-- Control placement.
 - Information hierarchy.
-- Feature availability.
 
 ## Variable Across Themes
 
 Themes may alter:
 
-- Color roles.
-- Contrast.
-- Surface material.
-- Corner radius.
-- Density.
-- Motion feel.
-- Border and shadow treatment.
+- Colors.
+- Spacing.
+- Radius.
+- Stroke thickness.
+- Shadows.
+- Opacity.
+- Animation timings.
+- Control density.
+- Overlay material feel.
+- Timeline thickness and hover scale.
+- Button shape and size within safe layout bounds.
+
+## Color Themes And Style Themes
+
+Color themes define palette and contrast.
+
+Style themes define controlled feel and density through tokens. Examples:
+
+- Minimal.
+- Soft.
+- Sharp.
+- Compact.
+- Floating.
+
+These must not become AIMP/Winamp-style free-form skins. Auralith uses a controlled token system where layout stability matters more than visual experimentation.
 
 ## Future Implementation Direction
 

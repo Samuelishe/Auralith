@@ -43,3 +43,27 @@ Notes:
 Next:
 
 - Keep future commits limited to source, documentation, and intentional project files.
+
+## 2026-05-14 - Unified Media Shell Model
+
+Context:
+
+- The project owner clarified that Auralith should not be built as separate audio and video player windows or projects.
+- The project is still in documentation/concept planning only.
+
+Changed:
+
+- Updated product, UI, architecture, playback, theming, roadmap, TODO, and decision docs around a unified media shell.
+- Accepted adaptive Audio and Video Presentation Modes as the primary model.
+- Recorded queue-first playback, non-blocking metadata enrichment, and thin libmpv abstraction guidance.
+
+Notes:
+
+- `MainWindow`/main media shell is the planned primary interaction point.
+- Audio and video presentation share playback/session/control foundations.
+- Planned Phase 1 solution structure remains a planning direction only and has not been created.
+
+Next:
+
+- Review and finalize Phase 1 solution structure before creating any projects.
+- Define the first vertical slice and playback spike questions.

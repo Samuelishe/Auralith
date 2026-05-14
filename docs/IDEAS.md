@@ -18,12 +18,17 @@ Potential style themes:
 - Playlist and queue as first-class surfaces.
 - Context menu actions for advanced file, metadata, and playback operations.
 - Optional internet metadata enrichment later.
+- Subtle cover-art-based dynamic background.
+- Lyrics panel.
+- Compact mode.
 
 ## Video Experience Ideas
 
 - Minimal disappearing controls.
 - Timeline preview or chapter markers if backend support and UX justify it.
+- Timeline preview thumbnails.
 - Subtitle and audio-track controls that are easy to reach but not always visible.
+- Borderless video mode.
 
 ## Provider Ideas
 
@@ -37,3 +42,4 @@ Potential style themes:
 - Basic settings should stay short and understandable.
 - Advanced settings can exist but should not become a full mpv option dump.
 - Expert overrides may be considered only if isolated from normal users.
+- Optional expert mpv overrides isolated from normal settings.

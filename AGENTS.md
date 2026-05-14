@@ -49,7 +49,7 @@ Auralith is a modern cross-platform audio/video player for Windows 10/11+ and Li
 
 The product direction is quiet premium, clean, technical, dark-first, and restrained. It should avoid gamer-style RGB, overloaded VLC-style surfaces, old-OS compromises, and settings sprawl. Minimalism must not become primitive. Advanced behavior should exist, but should be discoverable through context menus and advanced settings instead of dominating the main interface.
 
-Audio and video are separate windows with a shared visual language. The audio surface can be richer and metadata-oriented. The video surface should stay minimal, with overlay controls that disappear when they are not needed.
+Auralith uses one main media shell with adaptive presentation modes. Opening video switches the shell into Video Presentation Mode; opening audio switches it into Audio Presentation Mode. These are not separate players or separate primary windows. Playback state, queue/session state, theme state, and basic transport logic are shared.
 
 Themes may change feel, density, motion, edge treatment, contrast, and material behavior, but not the structural layout of the application.
 

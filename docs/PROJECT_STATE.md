@@ -25,11 +25,13 @@ In scope:
 - Initial roadmap.
 - Initial decision log.
 - Separation of confirmed direction from speculative ideas.
+- Unified media shell concept planning.
 
 Out of scope:
 
 - Avalonia UI implementation.
 - Window creation.
+- Separate audio/video player projects.
 - Playback engine.
 - libmpv integration.
 - MVVM structure.

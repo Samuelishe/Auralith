@@ -21,13 +21,15 @@ The goal is not to clone VLC, mpv frontends, Spotify, or YouTube. The goal is a 
 
 Auralith intentionally does not target old operating systems. Compatibility should not drive the product toward outdated UX or obsolete platform assumptions.
 
-The application should support both audio and video, but not force both modes into one overloaded window. Audio and video deserve different surfaces with a shared design language.
+The application should support both audio and video through one unified media shell. Audio and video should use adaptive presentation modes, not separate primary player applications or unrelated windows.
 
 ## Long-Term Direction
 
 Long-term ambitions include:
 
 - Local audio and video playback.
+- Unified media shell with adaptive Audio and Video Presentation Modes.
+- Shared playback session, queue, transport controls, and timeline foundation.
 - Metadata-rich audio experience.
 - Modern timeline and seeking behavior.
 - Subtitles.

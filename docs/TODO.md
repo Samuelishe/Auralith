@@ -13,6 +13,12 @@
 - [x] Add agent rule for final English commit descriptions.
 - [ ] Review documentation with the project owner.
 - [ ] Decide when Phase 1 may begin.
+- [ ] Review and finalize Phase 1 solution structure before creating projects.
+- [ ] Define the first vertical slice.
+- [ ] Define Avalonia project creation strategy.
+- [ ] Define dependency policy for native libmpv distribution on Windows/Linux.
+- [ ] Define initial UI token taxonomy.
+- [ ] Define playback spike questions.
 
 ## Future
 
