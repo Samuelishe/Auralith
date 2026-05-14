@@ -60,12 +60,21 @@ Validated:
 - `Auralith.Playback.Mpv` now probes a small set of development-time native locations and sets `MpvApi.RootPath` when a matching native library is found.
 - File opening requests can be initiated through the file picker, command-line media path, or a single-file drag/drop.
 - `tools/setup-libmpv-windows.ps1` can populate `runtimes/win-x64/native` from a trusted Windows mpv/libmpv build source.
-- A local run with a video from `E:\Downloads\Films` stayed alive after adding a Windows application manifest.
+- A local run with a correctly quoted video path from `E:\Downloads\Films` now reaches playback surface readiness.
+- Pending command-line media opens after readiness and sends the libmpv `LoadFile` command.
 
 Failed / blocked:
 
 - Before adding the manifest, Avalonia `NativeControlHost` failed on Windows with: "Unable to create child window for native control host. Application manifest with supported OS list might be required."
-- Embedded video rendering, overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, and live video interactions still require visual/manual validation.
+- The earlier 15-second process survival test validated only startup stability, not embedded playback.
+- Embedded video rendering, overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, drag/drop with real playback, and live video interactions still require visual/manual validation.
+
+Readiness finding:
+
+- `MpvView.ViewInitialized` exists in `HanumanInstitute.LibMpv.Avalonia`, but upstream source inspection found no invocation of that event in `MpvView.cs`.
+- Auralith must not depend on `ViewInitialized` as the readiness signal for the current spike.
+- Current spike diagnostics use `MpvContext` availability through `MpvView.MpvContextProperty` plus a short probe loop.
+- This is a tactical Phase 1 diagnostic path, not final playback architecture.
 
 Assumption change:
 
@@ -104,7 +113,16 @@ Local validation result:
 
 - Source used: shinchiro `mpv-dev-x86_64-20260421-git-5921fe5.7z`.
 - `libmpv-2.dll` was copied to `runtimes/win-x64/native`.
-- A command-line launch with `E:\Downloads\Films\Неуместный человек (Den brysomme mannen; The Bothersome Man) [2006] 1080p BDRemux-ARTiCUN0.mkv` stayed alive for 15 seconds and was stopped manually.
+- A command-line launch must quote media paths containing spaces.
+- With a quoted media path, diagnostics showed:
+  - startup media request accepted;
+  - media queued before playback readiness;
+  - native runtime found;
+  - `MpvView` created;
+  - `MpvContext` non-null;
+  - playback surface ready;
+  - pending media opened;
+  - libmpv `LoadFile` command sent.
 - Visual playback, overlay, seek, volume, fullscreen, resize, and drag/drop still need human confirmation.
 
 Current Windows missing-runtime message should explain:

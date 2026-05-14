@@ -718,3 +718,21 @@ Consequences:
 - This is a runtime compatibility requirement discovered by the playback spike.
 - It is not broad packaging work.
 - After adding the manifest, the app stayed alive during a short command-line launch with a local video file.
+
+## 2026-05-14 - Playback Surface Readiness Signal
+
+Status: Accepted For Phase 1 Spike
+
+Context:
+
+Manual visual testing showed `PlaybackSurface_Ready` was not firing while the UI stayed at "Playback surface is not ready yet". Source inspection of `HanumanInstitute.LibMpv.Avalonia.MpvView` found a `ViewInitialized` event, but no invocation of that event in the upstream `MpvView.cs`.
+
+Decision:
+
+Do not use `MpvView.ViewInitialized` as the readiness signal in the Phase 1 spike. Treat non-null `MpvView.MpvContext` as the practical readiness signal, observed through `MpvContextProperty` and a short diagnostic probe loop.
+
+Consequences:
+
+- Open requests can remain pending until playback readiness.
+- Diagnostics now show native runtime, `MpvView` creation, `MpvContext` state, readiness, and open command dispatch.
+- This is tactical spike code and may be refined after embedded rendering and control behavior are visually validated.

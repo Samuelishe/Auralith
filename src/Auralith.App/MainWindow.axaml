@@ -10,7 +10,7 @@
         Background="#08090B">
   <Grid RowDefinitions="Auto,*">
     <Border Background="#111318" Padding="10,8">
-      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+      <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
         <Button x:Name="OpenButton"
                 Content="Open"
                 Click="OpenButton_Click"
@@ -21,6 +21,11 @@
                    VerticalAlignment="Center"
                    TextTrimming="CharacterEllipsis"
                    Text="No media loaded" />
+        <TextBlock x:Name="PlaybackStatusText"
+                   Grid.Column="2"
+                   Foreground="#8E96A3"
+                   VerticalAlignment="Center"
+                   Text="Initializing" />
       </Grid>
     </Border>
 
@@ -34,6 +39,7 @@
           DragDrop.DragOver="VideoSurface_DragOver"
           DragDrop.Drop="VideoSurface_Drop">
       <mpv:MpvPlaybackSurface x:Name="PlaybackSurface"
+                              StatusChanged="PlaybackSurface_StatusChanged"
                               Ready="PlaybackSurface_Ready"
                               Failed="PlaybackSurface_Failed" />
 

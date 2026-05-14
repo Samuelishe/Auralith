@@ -325,3 +325,43 @@ Next:
 - Manually run the app with the same local video and confirm rendering and controls.
 - Keep native DLLs and downloaded archives out of git.
 - Continue treating release packaging as future work, not part of the current spike.
+
+## 2026-05-14 - Playback Surface Readiness Debugging
+
+Context:
+
+- Manual visual testing showed that startup no longer crashed, but playback still did not work.
+- UI stayed at "Playback surface is not ready yet".
+- Open button, drag/drop, and command-line media path did not produce visible playback because `_playback` stayed null.
+
+Changed:
+
+- Removed the incorrect dependency between file picker opening and playback readiness.
+- File picker can now open while playback is Initializing, Failed, or NotReady.
+- Media requests are retained as pending until playback readiness.
+- Added temporary Phase 1 diagnostics through console/debug output and visible status text.
+- Changed readiness detection from `MpvView.ViewInitialized` to non-null `MpvContext`.
+- Added diagnostics around pending startup media and libmpv `LoadFile` command dispatch.
+
+Findings:
+
+- Upstream `MpvView.cs` exposes `ViewInitialized`, but source inspection found no invocation of that event.
+- `MpvContextProperty` changes and reports a non-null `MpvContext`.
+- With a correctly quoted command-line media path, pending media opens after readiness and sends the `LoadFile` command.
+- A previous automated launch split the path with spaces into multiple args; the README command with quotes is required for such paths.
+
+Validated:
+
+- Native runtime found.
+- `MpvView` created.
+- `MpvContext` is non-null.
+- `Ready` fires.
+- Pending command-line media opens after readiness.
+- `LoadFile` command is sent.
+
+Still Not Validated:
+
+- Visual embedded video rendering.
+- Overlay z-order.
+- Play/pause, seek, volume, fullscreen, resize behavior with visible playback.
+- Drag/drop with live playback.

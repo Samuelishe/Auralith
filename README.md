@@ -28,6 +28,8 @@ Validated so far:
 - Windows dev-time libmpv setup helper exists.
 - Local media can be requested through the file picker, a command-line path, or a single-file drag/drop.
 - With shinchiro `mpv-dev-x86_64-20260421-git-5921fe5.7z`, `libmpv-2.dll` was found and the app stayed alive for a short command-line launch with a local video.
+- Playback surface readiness now reaches non-null `MpvContext`.
+- Correctly quoted command-line media paths are queued and opened after readiness.
 
 Not yet validated:
 
@@ -35,11 +37,12 @@ Not yet validated:
 - Overlay z-order over active video.
 - Runtime seek/volume/timeline behavior with real media.
 - Fullscreen behavior with active video rendering.
+- Drag/drop with live playback.
 - Native libmpv packaging strategy.
 
 Current blocker:
 
-- Native runtime can now be prepared for development, but embedded video rendering, overlay z-order, seek, volume, fullscreen, and resize still need visual/manual validation.
+- Native runtime and playback readiness can now be prepared and diagnosed, but embedded video rendering, overlay z-order, seek, volume, fullscreen, resize, and drag/drop still need visual/manual validation.
 
 ## Philosophy
 

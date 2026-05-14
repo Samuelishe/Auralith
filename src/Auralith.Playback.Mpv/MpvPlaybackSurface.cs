@@ -1,9 +1,11 @@
 using System.Runtime.InteropServices;
 using Auralith.Playback;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using HanumanInstitute.LibMpv.Core;
 using HanumanInstitute.LibMpv.Avalonia;
 
@@ -11,41 +13,104 @@ namespace Auralith.Playback.Mpv;
 
 public sealed class MpvPlaybackSurface : ContentControl
 {
+    private const int MaxContextProbeAttempts = 40;
+    private static readonly TimeSpan ContextProbeInterval = TimeSpan.FromMilliseconds(100);
+    private bool _initializationStarted;
+    private bool _readyRaised;
+
+    public event EventHandler<PlaybackSurfaceStatusChangedEventArgs>? StatusChanged;
     public event EventHandler<PlaybackSurfaceReadyEventArgs>? Ready;
     public event EventHandler<PlaybackSurfaceFailedEventArgs>? Failed;
 
-    protected override void OnInitialized()
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        base.OnInitialized();
+        base.OnAttachedToVisualTree(e);
+        if (_initializationStarted)
+        {
+            return;
+        }
+
+        _initializationStarted = true;
+        ReportStatus("Initializing playback surface");
         Dispatcher.UIThread.Post(InitializeSurface);
     }
 
     private void InitializeSurface()
     {
-        var nativeStatus = NativeMpvRuntime.Configure();
-        if (!nativeStatus.IsAvailable)
+        try
         {
-            Fail(nativeStatus.Message);
-            return;
-        }
-
-        var view = new MpvView();
-        view.ViewInitialized += (_, _) =>
-        {
-            if (view.MpvContext is null)
+            ReportStatus("Checking native libmpv runtime");
+            var nativeStatus = NativeMpvRuntime.Configure();
+            ReportStatus(nativeStatus.Message);
+            if (!nativeStatus.IsAvailable)
             {
-                Fail("libmpv context was not initialized");
+                Fail(nativeStatus.Message);
                 return;
             }
 
-            Ready?.Invoke(this, new PlaybackSurfaceReadyEventArgs(new MpvPlaybackSession(view.MpvContext)));
-        };
+            ReportStatus("Creating MpvView");
+            var view = new MpvView();
+            view.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == MpvView.MpvContextProperty)
+                {
+                    ReportStatus($"MpvContext property changed. Is null: {view.MpvContext is null}");
+                    CompleteReadyIfContextAvailable(view);
+                }
+            };
 
-        Content = view;
+            view.ViewInitialized += (_, _) =>
+            {
+                ReportStatus($"MpvView.ViewInitialized fired. MpvContext is null: {view.MpvContext is null}");
+                CompleteReadyIfContextAvailable(view);
+            };
+
+            Content = view;
+            ReportStatus("MpvView assigned to playback surface");
+            ProbeForMpvContext(view, 1);
+        }
+        catch (Exception ex)
+        {
+            Fail($"Playback surface initialization failed: {ex.Message}");
+        }
+    }
+
+    private void ProbeForMpvContext(MpvView view, int attempt)
+    {
+        if (CompleteReadyIfContextAvailable(view))
+        {
+            return;
+        }
+
+        if (attempt >= MaxContextProbeAttempts)
+        {
+            Fail("Playback surface did not become ready. MpvView was created, but MpvContext stayed null.");
+            return;
+        }
+
+        ReportStatus($"Waiting for MpvContext ({attempt}/{MaxContextProbeAttempts})");
+        DispatcherTimer.RunOnce(
+            () => ProbeForMpvContext(view, attempt + 1),
+            ContextProbeInterval,
+            DispatcherPriority.Background);
+    }
+
+    private bool CompleteReadyIfContextAvailable(MpvView view)
+    {
+        if (_readyRaised || view.MpvContext is null)
+        {
+            return _readyRaised;
+        }
+
+        _readyRaised = true;
+        ReportStatus("Playback surface ready");
+        Ready?.Invoke(this, new PlaybackSurfaceReadyEventArgs(new MpvPlaybackSession(view.MpvContext)));
+        return true;
     }
 
     private void Fail(string message)
     {
+        ReportStatus($"Playback surface failed: {message}");
         Content = new TextBlock
         {
             Text = message,
@@ -57,6 +122,14 @@ public sealed class MpvPlaybackSurface : ContentControl
         };
 
         Failed?.Invoke(this, new PlaybackSurfaceFailedEventArgs(message));
+    }
+
+    private void ReportStatus(string message)
+    {
+        var fullMessage = $"[Auralith.Playback.Mpv] {message}";
+        Console.WriteLine(fullMessage);
+        System.Diagnostics.Debug.WriteLine(fullMessage);
+        StatusChanged?.Invoke(this, new PlaybackSurfaceStatusChangedEventArgs(message));
     }
 }
 
@@ -160,6 +233,16 @@ public static class NativeMpvRuntime
 }
 
 public readonly record struct NativeMpvRuntimeStatus(bool IsAvailable, string Message);
+
+public sealed class PlaybackSurfaceStatusChangedEventArgs : EventArgs
+{
+    public PlaybackSurfaceStatusChangedEventArgs(string message)
+    {
+        Message = message;
+    }
+
+    public string Message { get; }
+}
 
 public sealed class PlaybackSurfaceReadyEventArgs : EventArgs
 {

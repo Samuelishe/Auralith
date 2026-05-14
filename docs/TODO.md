@@ -34,6 +34,7 @@
 - [ ] Define minimal first skeleton scope: App/Core/Playback/Playback.Mpv only.
 - [x] Define minimal playback abstraction surface.
 - [ ] Investigate Avalonia/mpv overlay compatibility risks.
+- [x] Diagnose playback surface readiness lifecycle.
 - [ ] Investigate libmpv support for audio filters/equalizer/normalization.
 - [ ] Investigate libmpv support for video adjustments.
 - [ ] Investigate Avalonia/system tray cross-platform options.
@@ -57,10 +58,11 @@
 - [x] Add Windows application manifest required by Avalonia NativeControlHost.
 - [ ] Validate embedded video rendering visually.
 - [ ] Validate overlay z-order above video.
-- [ ] Validate play/pause, seek, volume, duration/position updates.
+- [x] Validate command-line pending media reaches libmpv `LoadFile` command dispatch.
+- [ ] Validate play/pause, seek, volume, duration/position updates visually.
 - [ ] Validate fullscreen and resize behavior.
 - [ ] Validate single-click, double-click, and right-click behavior with live video.
-- [ ] Validate command-line file opening with real native libmpv playback.
+- [x] Validate command-line file opening reaches playback session with real native libmpv runtime.
 - [ ] Validate drag/drop file opening with real native libmpv playback.
 - [ ] Define future OS file association packaging plan for Windows `Open with`.
 - [ ] Define future Linux `.desktop` MIME association packaging plan.

@@ -35,6 +35,11 @@ public sealed partial class MainWindow : Window
     {
         _pendingOpenRequest = startupOpenRequest;
         InitializeComponent();
+        if (_pendingOpenRequest is not null)
+        {
+            Report($"Startup media queued: {_pendingOpenRequest.Path}");
+            MediaPathText.Text = "Media queued until playback surface becomes ready";
+        }
 
         _positionTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
         _positionTimer.Tick += PositionTimer_Tick;
@@ -48,15 +53,22 @@ public sealed partial class MainWindow : Window
         ShowOverlay();
     }
 
+    private void PlaybackSurface_StatusChanged(object? sender, PlaybackSurfaceStatusChangedEventArgs e)
+    {
+        PlaybackStatusText.Text = e.Message;
+    }
+
     private void PlaybackSurface_Ready(object? sender, PlaybackSurfaceReadyEventArgs e)
     {
         _playback = e.PlaybackSession;
         _playbackFailureMessage = null;
+        PlaybackStatusText.Text = "Ready";
         _playback.Volume = VolumeSlider.Value;
         _positionTimer.Start();
 
         if (_pendingOpenRequest is not null)
         {
+            Report($"Opening pending media after playback ready: {_pendingOpenRequest.Path}");
             OpenMedia(_pendingOpenRequest);
             _pendingOpenRequest = null;
         }
@@ -65,6 +77,7 @@ public sealed partial class MainWindow : Window
     private void PlaybackSurface_Failed(object? sender, PlaybackSurfaceFailedEventArgs e)
     {
         _playbackFailureMessage = e.Message;
+        PlaybackStatusText.Text = "Failed";
         MediaPathText.Text = e.Message;
     }
 
@@ -75,12 +88,6 @@ public sealed partial class MainWindow : Window
 
     private async Task OpenMediaAsync()
     {
-        if (_playback is null)
-        {
-            MediaPathText.Text = _playbackFailureMessage ?? "Playback surface is not ready yet";
-            return;
-        }
-
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "Open media file",
@@ -295,13 +302,26 @@ public sealed partial class MainWindow : Window
         if (_playback is null)
         {
             _pendingOpenRequest = request;
-            MediaPathText.Text = _playbackFailureMessage ?? "Playback surface is not ready yet";
+            Report($"Media queued until playback ready: {request.Path}");
+            MediaPathText.Text = _playbackFailureMessage is null
+                ? "Media queued until playback surface becomes ready"
+                : $"Media queued, but playback surface is failed: {_playbackFailureMessage}";
             return;
         }
 
-        _playback.Open(request.Path);
-        MediaPathText.Text = Path.GetFileName(request.Path);
-        ShowOverlay();
+        try
+        {
+            PlaybackStatusText.Text = "Opening media";
+            _playback.Open(request.Path);
+            MediaPathText.Text = Path.GetFileName(request.Path);
+            PlaybackStatusText.Text = "Media opened";
+            ShowOverlay();
+        }
+        catch (Exception ex)
+        {
+            PlaybackStatusText.Text = "Open failed";
+            MediaPathText.Text = $"Failed to open media: {ex.Message}";
+        }
     }
 
     private static string? GetSingleDroppedFile(DragEventArgs e)
@@ -375,5 +395,12 @@ public sealed partial class MainWindow : Window
         _contextNoticeTimer.Stop();
         _contextNoticeTimer.Start();
         ShowOverlay();
+    }
+
+    private static void Report(string message)
+    {
+        var fullMessage = $"[Auralith.App] {message}";
+        Console.WriteLine(fullMessage);
+        System.Diagnostics.Debug.WriteLine(fullMessage);
     }
 }

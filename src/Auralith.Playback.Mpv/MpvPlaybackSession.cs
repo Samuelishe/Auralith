@@ -32,9 +32,11 @@ public sealed class MpvPlaybackSession : IPlaybackSession
 
     public void Open(string path)
     {
+        Report($"Opening media: {path}");
         CurrentMediaPath = path;
         _mpv.LoadFile(path).Invoke();
         IsPaused = false;
+        Report("Media open command sent");
     }
 
     public void Stop()
@@ -58,5 +60,12 @@ public sealed class MpvPlaybackSession : IPlaybackSession
         {
             return fallback;
         }
+    }
+
+    private static void Report(string message)
+    {
+        var fullMessage = $"[Auralith.Playback.Mpv] {message}";
+        Console.WriteLine(fullMessage);
+        System.Diagnostics.Debug.WriteLine(fullMessage);
     }
 }
