@@ -143,3 +143,39 @@ Next:
 
 - Review Phase 1 readiness.
 - Keep first implementation limited to minimal skeleton and the recommended video-first slice when approved.
+
+## 2026-05-14 - Phase 1 Minimal Skeleton And Playback Spike Start
+
+Context:
+
+- The project owner approved beginning Phase 1 in a controlled, intentionally minimal form.
+- The approved scope was minimal skeleton, minimal Avalonia app foundation, and constrained libmpv playback spike.
+
+Changed:
+
+- Created only `src/Auralith.App`, `src/Auralith.Core`, `src/Auralith.Playback`, and `src/Auralith.Playback.Mpv`.
+- Added minimal Avalonia startup and unified main media shell.
+- Added minimal `IPlaybackSession` based on the approved slice.
+- Added `MpvPlaybackSession` and `MpvPlaybackSurface` in `Auralith.Playback.Mpv`.
+- Kept Hanuman/libmpv binding references out of `Auralith.App`.
+- Added overlay controls, timeline, play/pause, stop, volume, fullscreen, single-click, double-click, and right-click placeholder handling for the spike.
+
+Validated:
+
+- `dotnet restore Auralith.sln` succeeds.
+- `dotnet build Auralith.sln --no-restore` succeeds with 0 warnings and 0 errors.
+- GUI startup no longer crashes when native libmpv is missing; the app starts in a controlled failure mode.
+
+Failed / Blocked:
+
+- Native `libmpv.2` is not available in the Windows app output/runtime path.
+- Actual embedded playback, overlay z-order over live video, seek, volume, timeline sync, fullscreen-with-video, and live input behavior are not yet validated.
+
+Assumptions Updated:
+
+- Native dependency loading is an immediate Phase 1 blocker, not only later packaging work.
+
+Next:
+
+- Supply or define a compatible Windows native libmpv strategy for local development.
+- Re-run the video-first playback spike with native libmpv available.

@@ -44,6 +44,26 @@ Avoid as primary direction:
 - Avalonia Pro `MediaPlayer`.
 - Large custom playback engine before validation.
 
+## Current Spike Result
+
+Date: 2026-05-14
+
+Validated:
+
+- .NET 10 solution with the minimal approved skeleton builds successfully.
+- `HanumanInstitute.LibMpv` / `HanumanInstitute.LibMpv.Avalonia` package integration compiles.
+- Concrete Hanuman/libmpv usage is isolated in `Auralith.Playback.Mpv`.
+- The Avalonia app can start in a controlled failure mode when native libmpv is missing.
+
+Failed / blocked:
+
+- Runtime native loading fails without a compatible `libmpv.2` available to the app.
+- Embedded playback, overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, and live video interactions remain unvalidated until native libmpv is supplied.
+
+Assumption change:
+
+- Native dependency loading is not a later packaging concern only. It is an immediate blocker for playback validation on Windows.
+
 ## Thin Playback Abstraction
 
 The abstraction over libmpv should stay practical and narrow. Avoid a large speculative `IUniversalMediaEngine`.

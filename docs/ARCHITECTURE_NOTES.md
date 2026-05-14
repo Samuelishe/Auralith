@@ -77,6 +77,13 @@ Rules:
 - Playback abstraction should emerge from validated use cases and vertical slices, not speculative backend-agnostic ambitions.
 - Avoid pretending the project is backend-agnostic before implementation evidence exists.
 
+Phase 1 implementation pressure:
+
+- Embedded Avalonia rendering needs a visual control hosted by the app shell.
+- The current spike allows `Auralith.App` to host `Auralith.Playback.Mpv.MpvPlaybackSurface`.
+- `Auralith.App` must not reference `MpvView`, `MpvContext`, or Hanuman APIs directly.
+- This keeps concrete binding code inside `Auralith.Playback.Mpv` while avoiding speculative factories or DI layers.
+
 ## Architecture Principle
 
 Architecture should emerge from real seams in the application, not from speculative layering. Before implementation starts, document decisions and constraints. During implementation, prefer narrow vertical slices over large abstract frameworks.

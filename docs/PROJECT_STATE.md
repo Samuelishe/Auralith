@@ -4,20 +4,23 @@ Date: 2026-05-14
 
 ## Current Phase
 
-Documentation and agent continuity foundation.
+Phase 1 controlled technical validation.
 
-The repository is not yet an application implementation. The active goal is to create stable project memory and workflow documentation for long-running Codex/LLM-assisted development.
+Phase 0 documentation foundation is complete enough to support controlled Phase 1 work.
 
-Phase 0 is close to completion, but implementation has not started. Phase 1 may begin only after explicit user approval.
+Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Avalonia application foundation, and first playback integration spike only.
 
 ## Repository Status
 
 - Solution exists: `Auralith.sln`.
 - Documentation folder exists: `docs`.
-- No application project has been created yet.
-- No production code should exist at this phase.
-- No NuGet packages have been added.
-- No `src/` or `tests/` projects have been created.
+- Minimal `src/` skeleton exists: `Auralith.App`, `Auralith.Core`, `Auralith.Playback`, `Auralith.Playback.Mpv`.
+- No `tests/` projects have been created yet.
+- Minimal Avalonia application foundation exists.
+- Minimal Hanuman/libmpv playback spike code exists.
+- Build succeeds on .NET 10.
+- Runtime startup succeeds in controlled failure mode when native `libmpv` is missing.
+- Actual embedded playback is not yet validated because native `libmpv.2` is not available in the app output/runtime path.
 
 ## Current Scope
 
@@ -30,15 +33,15 @@ In scope:
 - Initial decision log.
 - Separation of confirmed direction from speculative ideas.
 - Unified media shell concept planning.
+- Minimal Phase 1 technical validation.
+- Native libmpv loading investigation.
 
 Out of scope:
 
-- Avalonia UI implementation.
-- Window creation.
+- Broad Avalonia UI implementation.
 - Separate audio/video player projects.
-- Playback engine.
-- libmpv integration.
-- NuGet package installation.
+- Full playback engine.
+- Full media player implementation.
 - Placeholder interfaces/classes/services/viewmodels.
 - MVVM structure.
 - DI setup.

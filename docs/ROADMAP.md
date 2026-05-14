@@ -4,9 +4,9 @@ This roadmap is phase-oriented. It is not a promise that every future idea will 
 
 ## Phase 0 - Documentation And Continuity
 
-Status: Active
+Status: Complete Enough For Phase 1
 
-Phase 0 documentation foundation is close to completion, but implementation has not started.
+Phase 0 documentation foundation is complete enough for controlled Phase 1 work.
 
 Goals:
 
@@ -25,9 +25,9 @@ Exit criteria:
 
 ## Phase 1 - Structure And Spike Preparation
 
-Status: Future
+Status: Active
 
-Phase 1 is not implementation approval. It remains planning work for structure, dependencies, spike preparation, and build/test strategy.
+Phase 1 is active only as a constrained technical validation phase. It is not broad implementation approval.
 
 Possible goals:
 
@@ -42,6 +42,15 @@ Possible goals:
 - Add Avalonia application project only after explicit approval.
 - Establish formatting and build verification.
 - Add dependency versions intentionally.
+
+Current validation status:
+
+- Minimal project skeleton created.
+- Minimal Avalonia application foundation created.
+- Build succeeds on .NET 10.
+- Hanuman/libmpv binding is isolated in `Auralith.Playback.Mpv`.
+- App startup no longer crashes when native `libmpv` is missing.
+- Native `libmpv.2` is missing from the Windows runtime path, so embedded playback is not yet validated.
 
 Planned structure to review before creation:
 
@@ -88,7 +97,7 @@ Possible goals:
 
 ## Phase 3 - Playback Spike
 
-Status: Future
+Status: Active/Blocked By Native libmpv Availability
 
 Possible goals:
 
@@ -101,6 +110,12 @@ Possible goals:
 - Validate subtitle/audio track enumeration and switching.
 - Investigate libmpv support for audio filters, equalizer, normalization, dynamic range compression, and replaygain/loudness options.
 - Investigate libmpv support for video adjustments.
+
+Current blocker:
+
+- `HanumanInstitute.LibMpv.Avalonia` attempts to load native `libmpv.2`.
+- No compatible native libmpv build is currently present next to the app output.
+- Windows bundled-native strategy must be decided before playback can be validated.
 
 Avoid as primary direction:
 
@@ -118,7 +133,7 @@ Possible goals:
 - Implement the first real application slice.
 - Introduce MVVM, DI, logging, and persistence only where needed.
 
-Recommended first vertical slice, not approved for implementation yet:
+Recommended first vertical slice, approved only for the current constrained spike:
 
 - Open video file.
 - Show main media window.

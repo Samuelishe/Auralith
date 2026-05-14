@@ -554,3 +554,39 @@ Consequences:
 - Phase 1 should remain structure planning, dependency planning, spike preparation, and build/test strategy planning.
 - Do not create placeholder interfaces, classes, services, view models, DI setup, or MVVM scaffolding during planning.
 - Add layers only when implementation pressure proves they remove real complexity.
+
+## 2026-05-14 - Begin Controlled Phase 1
+
+Status: Accepted
+
+Context:
+
+Phase 0 documentation is complete enough to begin a constrained technical validation phase.
+
+Decision:
+
+Begin Phase 1 with only the minimal skeleton, minimal Avalonia foundation, and first playback spike.
+
+Consequences:
+
+- Create only `Auralith.App`, `Auralith.Core`, `Auralith.Playback`, and `Auralith.Playback.Mpv`.
+- Do not create `Auralith.Media`, `Auralith.UI`, `Auralith.UI.DesignSystem`, `Auralith.Infrastructure`, audio/video player projects, broad MVVM infrastructure, DI setup, settings, metadata, playlists, themes, tray, or plugin systems.
+- Scope remains technical validation, not player buildout.
+
+## 2026-05-14 - Native libmpv Availability Blocks Playback Validation
+
+Status: Accepted
+
+Context:
+
+The first runtime launch found that Hanuman/libmpv requires native `libmpv.2` to be available to the app.
+
+Decision:
+
+Treat native libmpv availability as the immediate blocker for continuing embedded playback validation.
+
+Consequences:
+
+- The app should fail in a controlled way when native libmpv is missing.
+- Windows development needs a compatible bundled native libmpv next to the app output before playback can be validated.
+- Embedded rendering and playback controls remain unvalidated until native loading is resolved.
