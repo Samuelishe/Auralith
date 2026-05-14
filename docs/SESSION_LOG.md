@@ -67,3 +67,28 @@ Next:
 
 - Review and finalize Phase 1 solution structure before creating any projects.
 - Define the first vertical slice and playback spike questions.
+
+## 2026-05-14 - Video Interaction, Processing, And Tray Planning
+
+Context:
+
+- The project owner added requirements for video surface interaction, future media processing, tray behavior, and platform priority.
+- The project remains in documentation/concept planning only.
+
+Changed:
+
+- Documented single click/tap play-pause and double-click fullscreen for video.
+- Added future hold-to-seek exploration and conflict rules for video interactions.
+- Added planning notes for audio equalizer, video adjustments, audio normalization, dynamic range compression, and dialogue clarity.
+- Added tray behavior expectations and platform priority guidance.
+
+Notes:
+
+- Processing features must wait for libmpv playback spike validation.
+- Tray behavior must be documented honestly where Linux desktop environment support varies.
+
+Next:
+
+- Investigate libmpv audio/video processing capabilities.
+- Investigate Avalonia/system tray cross-platform options.
+- Define video interaction conflict rules before UI implementation.

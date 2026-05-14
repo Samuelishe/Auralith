@@ -66,6 +66,8 @@ Possible goals:
 - Explore non-production UI prototypes or design references.
 - Define design tokens.
 - Validate unified media shell and adaptive presentation mode concepts.
+- Define click, double-click, and future hold interaction model for the video surface.
+- Define conflict rules for video interactions, including context menu, fullscreen, drag, subtitle selection, and overlay controls.
 
 ## Phase 3 - Playback Spike
 
@@ -77,6 +79,8 @@ Possible goals:
 - Validate cross-platform packaging implications.
 - Identify playback API boundaries.
 - Validate thin playback abstraction and event/property mapping.
+- Investigate libmpv support for audio filters, equalizer, normalization, dynamic range compression, and replaygain/loudness options.
+- Investigate libmpv support for video adjustments.
 
 ## Phase 4 - Application Foundation
 
@@ -106,5 +110,14 @@ Possible goals:
 - Playlists and queue.
 - Audio Presentation Mode.
 - Subtitles and audio track switching.
+- Tray behavior for audio playback where platform support allows it.
+- Audio equalizer and normalization after playback validation.
+- Video adjustment controls after playback validation.
 - Theme variants.
 - Provider/plugin architecture.
+
+## Platform Capability Planning
+
+Status: Future
+
+The project should eventually maintain a feature capability matrix for Windows 11, Windows 10, and modern Linux desktop environments. Tray behavior is the first known area where full parity may not be realistic.

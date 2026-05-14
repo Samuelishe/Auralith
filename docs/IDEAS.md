@@ -21,6 +21,10 @@ Potential style themes:
 - Subtle cover-art-based dynamic background.
 - Lyrics panel.
 - Compact mode.
+- Audio equalizer.
+- Audio normalization.
+- Dynamic range compression/dialogue clarity for video playback.
+- Tray playback controls.
 
 ## Video Experience Ideas
 
@@ -29,6 +33,8 @@ Potential style themes:
 - Timeline preview thumbnails.
 - Subtitle and audio-track controls that are easy to reach but not always visible.
 - Borderless video mode.
+- Hold-to-seek left/right video zones.
+- Video adjustment panel for brightness, contrast, saturation, gamma, and possible sharpness.
 
 ## Provider Ideas
 
@@ -43,3 +49,8 @@ Potential style themes:
 - Advanced settings can exist but should not become a full mpv option dump.
 - Expert overrides may be considered only if isolated from normal users.
 - Optional expert mpv overrides isolated from normal settings.
+
+## Platform Ideas
+
+- Platform-specific feature capability matrix.
+- Honest tray support notes for Windows 11, Windows 10, and Linux desktop environments.

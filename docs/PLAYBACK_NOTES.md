@@ -40,6 +40,31 @@ Expected future surface:
 - Timeline precision and buffering state.
 - Queue/session ownership.
 - Async metadata enrichment.
+- Audio equalizer support through mpv/FFmpeg filters.
+- Audio normalization, replaygain, loudness normalization, dynamic range compression, and dialogue clarity options.
+- Video adjustment support for brightness, contrast, saturation, gamma, and possibly sharpness.
+- Clear UX boundaries for processing controls so they do not become settings clutter.
+
+## Media Processing Planning
+
+Audio and video processing features are planned but spike-dependent.
+
+Audio processing should investigate:
+
+- Equalizer support.
+- ReplayGain or loudness normalization for music.
+- Dynamic range compression or dialogue clarity for video.
+- mpv/FFmpeg filter availability and cross-platform behavior.
+
+Video processing should investigate:
+
+- Brightness.
+- Contrast.
+- Saturation.
+- Gamma.
+- Sharpness if backend support is practical.
+
+Do not implement processing controls before the libmpv playback spike confirms capabilities, performance implications, and UX boundaries.
 
 ## Non-Goals For Current Phase
 
@@ -49,3 +74,4 @@ Expected future surface:
 - No universal media engine abstraction.
 - No test media fixtures.
 - No native dependency packaging.
+- No equalizer, normalization, dynamic range, or video adjustment implementation.

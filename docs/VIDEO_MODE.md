@@ -10,6 +10,9 @@ Video Presentation Mode lives inside the unified media shell. It should feel mod
 
 - Minimal overlay controls.
 - Overlay controls that appear on mouse move/hover and disappear when idle.
+- Single click/tap on video toggles play/pause.
+- Double click on video toggles fullscreen.
+- Future hold-to-seek zones: hold right side for accelerated forward seek, hold left side for accelerated backward seek.
 - Modern timeline interaction.
 - Subtitle selection.
 - Audio track selection.
@@ -19,6 +22,7 @@ Video Presentation Mode lives inside the unified media shell. It should feel mod
 - Fullscreen behavior.
 - Borderless behavior.
 - Context menu for advanced actions.
+- Video adjustment controls: brightness, contrast, saturation, gamma, and possibly sharpness if backend support allows.
 
 ## Design Direction
 
@@ -28,9 +32,14 @@ The timeline should use the shared `AuralithTimeline` concept with video-specifi
 
 Advanced video actions should be available through a right-click context menu rather than permanent controls.
 
+Direct video interactions must be conflict-aware. Click, double-click, and future hold gestures should not interfere with subtitle selection, context menus, drag/window move behavior, overlay controls, or text selection.
+
+Video equalizer/adjustment controls are planned, but must not be implemented until the playback spike confirms libmpv capabilities and the UX boundary is clear.
+
 ## Current Non-Goals
 
 - No video presentation implementation.
 - No overlays.
 - No fullscreen behavior.
 - No subtitle implementation.
+- No video adjustment implementation.

@@ -40,6 +40,16 @@ Audio Presentation Mode may expose richer information: metadata, playlists, queu
 
 Video Presentation Mode should protect the content. Controls are overlays, minimal by default, and should appear on mouse movement/hover and disappear when idle.
 
+## Direct Video Interaction
+
+Video should support direct surface interactions inspired by modern web players:
+
+- Single click or tap toggles play/pause.
+- Double click toggles fullscreen.
+- Future exploration: hold on the right side to accelerate forward seek, and hold on the left side to accelerate backward seek.
+
+These interactions must be designed so they do not conflict with subtitle selection, right-click context menus, drag/window move behavior, overlay controls, or text selection.
+
 ## Timeline Direction
 
 The playback timeline should feel modern and web-literate, closer to contemporary YouTube/web-player expectations than legacy desktop sliders. This includes strong hover affordances, accurate seeking, and readable buffered/progress states when appropriate.

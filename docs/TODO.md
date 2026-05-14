@@ -19,6 +19,11 @@
 - [ ] Define dependency policy for native libmpv distribution on Windows/Linux.
 - [ ] Define initial UI token taxonomy.
 - [ ] Define playback spike questions.
+- [ ] Investigate libmpv support for audio filters/equalizer/normalization.
+- [ ] Investigate libmpv support for video adjustments.
+- [ ] Investigate Avalonia/system tray cross-platform options.
+- [ ] Define click/double-click/hold interaction model for video surface.
+- [ ] Define conflict rules for video interactions: context menu, fullscreen, drag, overlay controls, subtitle selection, and text selection.
 
 ## Future
 
@@ -28,3 +33,4 @@
 - [ ] Define build/test verification commands.
 - [ ] Investigate libmpv packaging options per OS.
 - [ ] Define first UI design-token draft.
+- [ ] Draft platform-specific feature capability matrix.

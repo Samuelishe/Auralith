@@ -18,6 +18,9 @@ Audio Presentation Mode lives inside the unified media shell. It should support 
 - Repeat/shuffle in a future phase.
 - Track metadata.
 - Metadata area.
+- Audio equalizer in a future phase.
+- Audio normalization/dynamic range tools in a future phase.
+- Tray-oriented audio playback behavior where platform support allows it.
 - Context actions.
 - Local file metadata through TagLibSharp.
 - Future internet metadata providers.
@@ -30,9 +33,12 @@ The audio timeline should use the shared `AuralithTimeline` concept, with more v
 
 Metadata enrichment from the internet remains an optional future provider/plugin idea, not MVP scope.
 
+Audio equalizer and normalization features are planned but must wait for the libmpv playback spike. Normalization should distinguish music loudness normalization from video-oriented dynamic range compression/dialogue clarity.
+
 ## Current Non-Goals
 
 - No audio presentation implementation.
 - No playlist model.
 - No metadata database.
 - No TagLibSharp integration.
+- No equalizer or normalization implementation.

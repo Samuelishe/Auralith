@@ -23,6 +23,16 @@ Auralith intentionally does not target old operating systems. Compatibility shou
 
 The application should support both audio and video through one unified media shell. Audio and video should use adaptive presentation modes, not separate primary player applications or unrelated windows.
 
+## Platform Priority
+
+Auralith remains cross-platform for Windows and Linux. When a feature cannot be implemented with full parity everywhere, polish and fallback priority is:
+
+1. Windows 11.
+2. Windows 10.
+3. Arch Linux / modern Linux desktop environments.
+
+This priority must not justify careless Windows-only architecture. It may guide feature polish, platform-specific fallbacks, and honest documentation of limitations.
+
 ## Long-Term Direction
 
 Long-term ambitions include:
@@ -32,8 +42,11 @@ Long-term ambitions include:
 - Shared playback session, queue, transport controls, and timeline foundation.
 - Metadata-rich audio experience.
 - Modern timeline and seeking behavior.
+- Direct video surface interactions such as click/tap play-pause and double-click fullscreen.
 - Subtitles.
 - Audio track switching.
+- Audio equalizer, video adjustments, and audio normalization after playback capability validation.
+- System tray behavior, especially for audio playback where platform support allows it.
 - Extensible internet metadata providers.
 - Themable visual feel without structural layout fragmentation.
 - Carefully scoped advanced settings.

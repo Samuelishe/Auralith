@@ -281,3 +281,76 @@ Consequences:
 
 - No `src/` projects or Avalonia app in Phase 0.
 - No playback engine, windows, service layer, DI setup, or placeholder code during Phase 0.
+
+## 2026-05-14 - Direct Video Surface Interaction
+
+Status: Accepted
+
+Context:
+
+Video playback should feel modern and close to familiar web-player interaction patterns without adding permanent UI controls.
+
+Decision:
+
+Video surface interaction should support single click/tap to toggle play/pause and double click to toggle fullscreen.
+
+Consequences:
+
+- Video controls can remain minimal and overlay-based.
+- Interaction design must avoid conflicts with subtitle selection, right-click context menus, drag/window move behavior, overlay controls, and text selection.
+- Hold-to-seek left/right zones remain a future UX feature to explore, not an immediate MVP requirement.
+
+## 2026-05-14 - Media Processing Features Require Playback Spike
+
+Status: Accepted
+
+Context:
+
+Audio equalizer, video adjustments, normalization, and dynamic range behavior depend on libmpv/FFmpeg capabilities and UX boundaries.
+
+Decision:
+
+Advanced media processing features are planned, but must be validated through the libmpv playback spike before implementation.
+
+Consequences:
+
+- Investigate audio filters, equalizer, replaygain/loudness normalization, dynamic range compression, and dialogue clarity.
+- Investigate video brightness, contrast, saturation, gamma, and possible sharpness controls.
+- Do not implement processing UI or playback filters before capabilities and constraints are confirmed.
+
+## 2026-05-14 - Tray Support Desired With Platform Differences
+
+Status: Accepted
+
+Context:
+
+Audio playback benefits from background-friendly behavior, but system tray support varies across platforms and Linux desktop environments.
+
+Decision:
+
+Auralith should support minimizing to system tray where feasible, especially for audio playback. Tray behavior should include restore, play/pause, next/previous, and current track title if platform support allows.
+
+Consequences:
+
+- Windows 11 should receive the highest polish for tray behavior.
+- Windows 10 is secondary.
+- Linux/Arch support should be best-effort and documented honestly when desktop environment support varies.
+- Do not overpromise Linux tray parity.
+
+## 2026-05-14 - Platform Feature Polish Priority
+
+Status: Accepted
+
+Context:
+
+Auralith targets Windows and Linux, but some desktop integration features may not work consistently across all platforms.
+
+Decision:
+
+When full cross-platform parity is impossible, feature polish priority is Windows 11, then Windows 10, then Arch Linux / modern Linux desktop environments.
+
+Consequences:
+
+- This priority may guide feature polish and fallback behavior.
+- It must not justify careless Windows-only architecture.
+- Platform-specific limitations should be documented honestly.
