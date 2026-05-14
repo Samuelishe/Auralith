@@ -56,8 +56,9 @@
 - [x] Provide compatible Windows native `libmpv-2.dll` locally under `runtimes/win-x64/native` for spike validation.
 - [ ] Validate that the improved missing-runtime message is clear during a manual app launch.
 - [x] Add Windows application manifest required by Avalonia NativeControlHost.
-- [ ] Validate embedded video rendering visually.
+- [x] Validate embedded video rendering visually.
 - [ ] Validate overlay z-order above video.
+- [ ] Validate overlay idle show/hide behavior with live playback.
 - [x] Validate command-line pending media reaches libmpv `LoadFile` command dispatch.
 - [ ] Validate play/pause, seek, volume, duration/position updates visually.
 - [ ] Validate fullscreen and resize behavior.

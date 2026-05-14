@@ -9,7 +9,7 @@
         MinHeight="460"
         Background="#08090B">
   <Grid RowDefinitions="Auto,*">
-    <Border Background="#111318" Padding="10,8">
+    <Border Background="#111318" Padding="8,6">
       <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
         <Button x:Name="OpenButton"
                 Content="Open"
@@ -60,7 +60,7 @@
                   PointerReleased="TimelineSlider_PointerReleased"
                   PropertyChanged="TimelineSlider_PropertyChanged" />
 
-          <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="12">
+          <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="12">
             <Button x:Name="PlayPauseButton"
                     Content="Play"
                     Click="PlayPauseButton_Click"
@@ -86,6 +86,11 @@
                     Maximum="100"
                     Value="70"
                     PropertyChanged="VolumeSlider_PropertyChanged" />
+            <Button x:Name="FullscreenButton"
+                    Grid.Column="5"
+                    Content="Fullscreen"
+                    Click="FullscreenButton_Click"
+                    MinWidth="96" />
           </Grid>
         </Grid>
       </Border>

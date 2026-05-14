@@ -120,9 +120,15 @@ public sealed partial class MainWindow : Window
         TogglePlayPause();
     }
 
+    private void FullscreenButton_Click(object? sender, RoutedEventArgs e)
+    {
+        ToggleFullscreen();
+    }
+
     private void StopButton_Click(object? sender, RoutedEventArgs e)
     {
         _playback?.Stop();
+        TimelineSlider.Value = 0;
         UpdatePlaybackState();
         ShowOverlay();
     }
@@ -134,6 +140,11 @@ public sealed partial class MainWindow : Window
 
     private void VideoSurface_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (Overlay.IsPointerOver)
+        {
+            return;
+        }
+
         var point = e.GetCurrentPoint(VideoSurface);
         if (point.Properties.IsRightButtonPressed)
         {
@@ -151,6 +162,11 @@ public sealed partial class MainWindow : Window
 
     private void VideoSurface_DoubleTapped(object? sender, TappedEventArgs e)
     {
+        if (Overlay.IsPointerOver)
+        {
+            return;
+        }
+
         ToggleFullscreen();
         e.Handled = true;
     }
@@ -315,6 +331,7 @@ public sealed partial class MainWindow : Window
             _playback.Open(request.Path);
             MediaPathText.Text = Path.GetFileName(request.Path);
             PlaybackStatusText.Text = "Media opened";
+            UpdatePlaybackState();
             ShowOverlay();
         }
         catch (Exception ex)

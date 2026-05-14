@@ -20,9 +20,9 @@ public sealed class MpvPlaybackSession : IPlaybackSession
         set => _mpv.SetProperty("pause", value);
     }
 
-    public TimeSpan Position => TimeSpan.FromSeconds(Math.Max(0, ReadProperty("time-pos", 0d)));
+    public TimeSpan Position => TimeSpan.FromSeconds(SanitizeSeconds(ReadProperty("time-pos", 0d)));
 
-    public TimeSpan Duration => TimeSpan.FromSeconds(Math.Max(0, ReadProperty("duration", 0d)));
+    public TimeSpan Duration => TimeSpan.FromSeconds(SanitizeSeconds(ReadProperty("duration", 0d)));
 
     public double Volume
     {
@@ -60,6 +60,11 @@ public sealed class MpvPlaybackSession : IPlaybackSession
         {
             return fallback;
         }
+    }
+
+    private static double SanitizeSeconds(double value)
+    {
+        return double.IsFinite(value) ? Math.Max(0, value) : 0;
     }
 
     private static void Report(string message)

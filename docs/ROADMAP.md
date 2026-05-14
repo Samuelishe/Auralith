@@ -59,7 +59,8 @@ Current validation status:
 - File picker, command-line file argument, and single-file drag/drop are supported as current app-level media-open inputs.
 - Local `libmpv-2.dll` was prepared through the dev helper.
 - Command-line media opening reaches pending queue, playback readiness, and libmpv `LoadFile` command dispatch when the path is correctly quoted.
-- Embedded rendering and controls still require visual/manual validation.
+- Embedded video rendering has been manually confirmed.
+- Overlay controls, seek, volume, fullscreen, resize, and drag/drop still require visual/manual validation.
 
 Planned structure to review before creation:
 
@@ -124,7 +125,7 @@ Current blocker:
 
 - `HanumanInstitute.LibMpv.Avalonia` expects native `libmpv-2.dll` on Windows.
 - Dev-time native setup is available, but final Windows release packaging remains unimplemented.
-- Embedded video render, overlay z-order, seek, volume, fullscreen, resize behavior, and drag/drop with live playback still need manual validation with the prepared runtime.
+- Overlay z-order, seek, volume, fullscreen, resize behavior, and drag/drop with live playback still need manual validation with the prepared runtime.
 - Native DLLs are not committed yet; distribution and licensing must be reviewed before bundled binaries are added.
 
 Current file input status:

@@ -49,7 +49,7 @@ public sealed class MpvPlaybackSurface : ContentControl
             }
 
             ReportStatus("Creating MpvView");
-            var view = new MpvView();
+            var view = new MpvView { Renderer = VideoRenderer.OpenGl };
             view.PropertyChanged += (_, e) =>
             {
                 if (e.Property == MpvView.MpvContextProperty)

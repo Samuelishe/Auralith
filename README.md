@@ -30,10 +30,10 @@ Validated so far:
 - With shinchiro `mpv-dev-x86_64-20260421-git-5921fe5.7z`, `libmpv-2.dll` was found and the app stayed alive for a short command-line launch with a local video.
 - Playback surface readiness now reaches non-null `MpvContext`.
 - Correctly quoted command-line media paths are queued and opened after readiness.
+- Embedded video rendering has been manually confirmed.
 
 Not yet validated:
 
-- Embedded live video playback.
 - Overlay z-order over active video.
 - Runtime seek/volume/timeline behavior with real media.
 - Fullscreen behavior with active video rendering.

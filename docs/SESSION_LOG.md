@@ -365,3 +365,39 @@ Still Not Validated:
 - Overlay z-order.
 - Play/pause, seek, volume, fullscreen, resize behavior with visible playback.
 - Drag/drop with live playback.
+
+## 2026-05-14 - Minimal Video Controls Pass
+
+Context:
+
+- Manual visual validation confirmed that embedded video rendering now works.
+- Phase 1 remains a playback spike, not a UI buildout.
+- The next focus is minimal usable video controls over the working render path.
+
+Changed:
+
+- Switched the Hanuman view to `VideoRenderer.OpenGl` so Avalonia overlay controls can render above the video area.
+- Added a fullscreen button to the lower overlay.
+- Kept fullscreen ownership in `MainWindow`.
+- Prevented video surface click/double-click gestures from firing while the pointer is over overlay controls.
+- Kept overlay show-on-mouse-move and idle hiding behavior.
+- Added a small guard against non-finite mpv position/duration/volume values during loading.
+
+Validated:
+
+- Build succeeds after the controls pass.
+- Command-line launch still reaches playback readiness and sends `LoadFile`.
+
+Still Not Validated:
+
+- Manual overlay z-order confirmation after switching to OpenGL renderer.
+- Play/pause button and click-to-toggle behavior.
+- Timeline seek.
+- Volume slider.
+- Fullscreen button and double-click fullscreen.
+- Resize behavior.
+- Drag/drop with visible playback.
+
+Notes:
+
+- Current diagnostics are temporary Phase 1 tooling and should not become production UI.

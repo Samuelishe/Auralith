@@ -28,7 +28,8 @@ Phase 1 has started in a deliberately narrow form: minimal skeleton, minimal Ava
 - The helper downloaded a shinchiro mpv/libmpv development archive and copied `libmpv-2.dll` into `runtimes/win-x64/native` locally.
 - The app launched with a correctly quoted local video path from `E:\Downloads\Films`.
 - Playback surface diagnostics now show native runtime found, `MpvView` created, `MpvContext` non-null, `Ready` fired, pending media opened, and libmpv `LoadFile` command sent.
-- Actual embedded video rendering and playback controls still need visual/manual validation.
+- Embedded video rendering has been manually confirmed.
+- Playback controls, overlay behavior, fullscreen, resize, and drag/drop still need visual/manual validation.
 - Future Windows releases should aim to bundle native libmpv so normal users can launch Auralith without manually installing mpv/libmpv.
 - Native DLLs are not committed during the current spike because licensing, distribution shape, and packaging ownership still need explicit decisions.
 - File input app capability now exists for file picker, command-line media path, and single local file drag/drop.

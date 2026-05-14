@@ -62,12 +62,14 @@ Validated:
 - `tools/setup-libmpv-windows.ps1` can populate `runtimes/win-x64/native` from a trusted Windows mpv/libmpv build source.
 - A local run with a correctly quoted video path from `E:\Downloads\Films` now reaches playback surface readiness.
 - Pending command-line media opens after readiness and sends the libmpv `LoadFile` command.
+- Embedded video rendering was manually confirmed by the project owner.
+- The current spike uses `VideoRenderer.OpenGl` so Avalonia overlay controls can render above the video surface.
 
 Failed / blocked:
 
 - Before adding the manifest, Avalonia `NativeControlHost` failed on Windows with: "Unable to create child window for native control host. Application manifest with supported OS list might be required."
 - The earlier 15-second process survival test validated only startup stability, not embedded playback.
-- Embedded video rendering, overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, drag/drop with real playback, and live video interactions still require visual/manual validation.
+- Overlay-on-video behavior, duration/position sync, seek, volume, fullscreen-with-video, drag/drop with real playback, and live video interactions still require visual/manual validation.
 
 Readiness finding:
 
@@ -124,6 +126,7 @@ Local validation result:
   - pending media opened;
   - libmpv `LoadFile` command sent.
 - Visual playback, overlay, seek, volume, fullscreen, resize, and drag/drop still need human confirmation.
+- Video render itself has now been manually confirmed; the remaining visual checks are control behavior, overlay behavior, resize/fullscreen behavior, and drag/drop.
 
 Current Windows missing-runtime message should explain:
 

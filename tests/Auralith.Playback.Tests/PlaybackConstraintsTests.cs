@@ -18,6 +18,14 @@ public sealed class PlaybackConstraintsTests
     }
 
     [Fact]
+    public void ClampVolume_returns_zero_for_non_finite_value()
+    {
+        PlaybackConstraints.ClampVolume(double.NaN).ShouldBe(0);
+        PlaybackConstraints.ClampVolume(double.PositiveInfinity).ShouldBe(0);
+        PlaybackConstraints.ClampVolume(double.NegativeInfinity).ShouldBe(0);
+    }
+
+    [Fact]
     public void ClampPosition_returns_zero_for_negative_position()
     {
         PlaybackConstraints.ClampPosition(TimeSpan.FromSeconds(-5))
