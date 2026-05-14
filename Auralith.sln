@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2C0B8709-7853-4D47-A0B4-7284690C94E1}"
+	ProjectSection(SolutionItems) = preProject
+		AGENTS.md = AGENTS.md
+		docs\ARCHITECTURE_NOTES.md = docs\ARCHITECTURE_NOTES.md
+		docs\AUDIO_MODE.md = docs\AUDIO_MODE.md
+		docs\DECISIONS.md = docs\DECISIONS.md
+		docs\DESIGN_SYSTEM.md = docs\DESIGN_SYSTEM.md
+		docs\IDEAS.md = docs\IDEAS.md
+		docs\INDEX.md = docs\INDEX.md
+		docs\PLAYBACK_NOTES.md = docs\PLAYBACK_NOTES.md
+		docs\PLUGIN_SYSTEM_IDEAS.md = docs\PLUGIN_SYSTEM_IDEAS.md
+		docs\PROJECT_STATE.md = docs\PROJECT_STATE.md
+		docs\PROJECT_VISION.md = docs\PROJECT_VISION.md
+		docs\ROADMAP.md = docs\ROADMAP.md
+		docs\SESSION_LOG.md = docs\SESSION_LOG.md
+		docs\TECH_STACK.md = docs\TECH_STACK.md
+		docs\THEMING_SYSTEM.md = docs\THEMING_SYSTEM.md
+		docs\TODO.md = docs\TODO.md
+		docs\UI_PHILOSOPHY.md = docs\UI_PHILOSOPHY.md
+		docs\VIDEO_MODE.md = docs\VIDEO_MODE.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal
