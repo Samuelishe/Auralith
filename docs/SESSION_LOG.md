@@ -179,3 +179,23 @@ Next:
 
 - Supply or define a compatible Windows native libmpv strategy for local development.
 - Re-run the video-first playback spike with native libmpv available.
+
+## 2026-05-14 - Repository README
+
+Context:
+
+- The project needed a GitHub-facing README that reflects the current real state rather than future ambitions as completed features.
+
+Changed:
+
+- Added root `README.md`.
+- Documented current Phase 1 status, build/run instructions, native libmpv blocker, repository structure, development philosophy, and third-party technology acknowledgements.
+- Added `README.md` to solution items for Rider visibility.
+
+Notes:
+
+- README explicitly states that Auralith is not production-ready and embedded playback is not yet validated.
+
+Next:
+
+- Update README when native libmpv loading and embedded playback are validated.

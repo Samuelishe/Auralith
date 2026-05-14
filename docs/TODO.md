@@ -9,6 +9,7 @@
 - [x] Record initial decisions.
 - [x] Record phase roadmap.
 - [x] Add documentation items to the solution for Rider visibility.
+- [x] Add repository-level README that reflects current Phase 1 state.
 - [x] Configure repository ignore rules for the project foundation.
 - [x] Add agent rule for final English commit descriptions.
 - [ ] Review documentation with the project owner.

@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2C0B8709-7853-4D47-A0B4-7284690C94E1}"
 	ProjectSection(SolutionItems) = preProject
 		AGENTS.md = AGENTS.md
+		README.md = README.md
 		docs\ARCHITECTURE_NOTES.md = docs\ARCHITECTURE_NOTES.md
 		docs\AUDIO_MODE.md = docs\AUDIO_MODE.md
 		docs\DECISIONS.md = docs\DECISIONS.md
